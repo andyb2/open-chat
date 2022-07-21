@@ -10,7 +10,7 @@ const Grid = styled.div`
 `
 
 const Chat = () => {
-
+    console.log(`CHAT PAGE RAN`)
     return (
         <Grid>
             <Rooms />

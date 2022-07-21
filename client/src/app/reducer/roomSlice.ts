@@ -1,28 +1,46 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 export interface JoinedUser {
-  usersConnected: string[]
+  currentRoom: string
+  previousRoom: string
+  roomUsers: string[]
+  chat: object[]
 }
 
 const initialState: JoinedUser = {
-  usersConnected: [],
+  currentRoom: 'general-lobby',
+  previousRoom: '',
+  roomUsers: [],
+  chat: []
 };
 
 export const roomSlice = createSlice({
   name: 'rooms',
   initialState,
   reducers: {
+    joinedRoom: (state, action) => {
+      state.previousRoom = state.currentRoom;
+      state.currentRoom = action.payload;
+      state.chat = [];
+    },
     userList: (state, action) => {
-        state.usersConnected = action.payload;
+      state.roomUsers = action.payload;
     }, 
     removeUser: (state, action) => {
-        const usersCopy = [...state.usersConnected]
-        const idxOfUser = usersCopy.indexOf(action.payload);
-        usersCopy.splice(idxOfUser, 1);
-        state.usersConnected = usersCopy;
+      state.roomUsers = action.payload;
+    },
+    messages: (state, action) => {
+      const { message, username } = action.payload;
+      const messageObject = {
+        sender: username,
+        content: message
+      }
+      const chatCopy = [...state.chat];
+      chatCopy.push({...messageObject});
+      state.chat = chatCopy;
     }
   }
 });
 
-export const { userList, removeUser } = roomSlice.actions;
+export const { joinedRoom, userList, removeUser, messages } = roomSlice.actions;
 export default roomSlice.reducer;

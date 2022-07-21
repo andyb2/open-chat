@@ -7,18 +7,18 @@ const UsersContainer = styled.div`
 
 interface JoinedUser {
     room: {
-        usersConnected: string[]
+        roomUsers: string[]
     }
 }
 
 const UserList = () => {
-    const { usersConnected } = useSelector((state: JoinedUser) => state.room);
-    console.log(`USERLIST`, usersConnected)
+    const roomUsers = useSelector((state: JoinedUser) => state.room.roomUsers);
+    
     return (
         <UsersContainer>
-            {usersConnected.map((user) => {
+            {roomUsers.map((user) => {
                 return (
-                    <div>
+                    <div key={user}>
                         {user}
                     </div>
                 )

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { user } from '../app/reducer/userSlice';
+import socket from '../socket';
 
 const Parent = styled.div`
     display: flex;
@@ -49,16 +50,34 @@ const errorHandles = {
     maxLength: {
         value: 15,
         message: 'Username can only be maximum 15 characters',
-    }
+    },
 }
 
 const UserCreate = () => {
     const { register, handleSubmit, reset, formState: { errors, isSubmitSuccessful } } = useForm<FormValues>();
     const dispatch = useDispatch();
     
-    const onSubmit = handleSubmit(({ username }) => {
-        dispatch(user(username));
+    const onSubmit = handleSubmit( async ({ username }) => {
+            dispatch(user(username));
+            socket.emit('create-user', username)
     });
+
+    const isUnique = async (username: string) => {
+            const data = {
+                user: username
+            };
+            const checkForUniqueUsername = await fetch('/create-user', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+            const response = await checkForUniqueUsername.json();
+
+            if (!response) return 'Username already exists';
+            return response;
+    }
 
     useEffect(() => {
         reset({username: ''})
@@ -72,8 +91,8 @@ const UserCreate = () => {
                     <Paragraph>* Username can only be maximum 15 characters</Paragraph>
                     <Paragraph>* Only letters and numbers are accepted</Paragraph>
                 </Section>
-                <input {...register('username', errorHandles)} placeholder='Enter Username' autoComplete='off' />
-                { errors?.username && <Error>{`* ${errors.username.message}`}</Error>}
+                <input {...register('username', {  ...errorHandles, validate: (input) => isUnique(input)}, )} placeholder='Enter Username' autoComplete='off' />
+                { errors?.username && <Error>{`* ${errors.username.message}`}</Error> }
             </form>
         </Parent>
     )

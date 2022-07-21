@@ -1,7 +1,11 @@
 import styled from "styled-components";
+import { useForm } from "react-hook-form";
+import socket from "../socket";
+import { useDispatch, useSelector } from "react-redux";
+
 
 const MessageParent = styled.div`
-    // height: 100%;
+    min-height: 8vh;
     grid-area: message-input;
     // border: 1px solid blue;
     display: flex;
@@ -35,12 +39,35 @@ const Button = styled.button`
     // width: 100%;
 `
 
+interface Room {
+    room: {
+        currentRoom: string
+    }
+}
+
+interface User {
+    user: {
+        username: string
+    }
+}
+
 const MessageInput = () => {
+    const { register, handleSubmit, reset } = useForm();
+    const currentRoom = useSelector((state: Room) => state.room.currentRoom);
+    const username = useSelector((state: User) => state.user.username);
+
+    const onSubmit = handleSubmit(({ message }) => {
+        socket.emit('new-message', { message, currentRoom, username });
+        reset({message: ''});
+    })
+
     return (
         <MessageParent>
             <DeliveryContainer>
-                <Input />
-                <Button>Send</Button>
+            <form style={{display: 'flex'}}>
+                <Input {...register('message' )} placeholder='Enter Username' autoComplete='off' />
+                <Button onClick={onSubmit}>Send</Button>
+            </form>
             </DeliveryContainer>
         </MessageParent>
     )

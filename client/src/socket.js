@@ -1,17 +1,22 @@
 import io from 'socket.io-client';
 import { store } from './app/store';
-import { userList, removeUser } from './app/reducer/roomSlice';
+import { userList, removeUser, messages } from './app/reducer/roomSlice';
 
 const socket = io(window.location.origin);
 
 socket.on('connect', () => {
-    console.log(`connected`);
-    socket.on('join-room', (connectedUser) => {
-        store.dispatch(userList(connectedUser));
+
+    socket.on('join-room', (usersInRoom) => {
+        store.dispatch(userList(usersInRoom));
     });
-    socket.on('remove-room-user', (username) => {
-        store.dispatch(removeUser(username));
+
+    socket.on('new-message', ({ message, username }) => {
+        store.dispatch(messages({ message, username }));
     })
-})
+
+    socket.on('remove-room-user', (roomData) => {
+        store.dispatch(removeUser(roomData));
+    });
+});
 
 export default socket;
