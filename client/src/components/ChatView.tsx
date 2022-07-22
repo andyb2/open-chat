@@ -2,27 +2,35 @@ import { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import MessageInput from "./MessageInput";
-import UserList from "./UserList";
 
 const Window = styled.div`
-    display: grid;
-    grid-template-areas: 'messages-view user-list'
-                         'message-input user-list';
-    grid-template-columns: 1fr 180px;
-    grid-template-rows: 1fr 75px;
-    border: 1px solid red;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    overflow: auto;
 `
 
-const Messages = styled.div`
+const LobbyTitle = styled.h1`
+    grid-area: room-title;
     display: flex;
-    flex-wrap: wrap;
-    // position: relative;
+    align-items: center;
+    line-height: 1;
+    padding-left: 1rem;
+    margin: 0;
+    padding: 1rem;
+    color: white;
+    background-color: black;
+`
+const Container = styled.div`  
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
     grid-area: messages-view;
-    border: 1px solid purple;
-    // overflow-y: scroll;
-    // overflow-x: visible;
-    max-width: 1000px;
-    max-height: 92vh;
+    border-bottom: 1px solid rgb(234, 234, 234);
+    background-color: rgb(41, 41, 41);
 `
 
 const Message = styled.div`
@@ -30,61 +38,86 @@ const Message = styled.div`
     flex-direction: column;
     padding: 0.2rem;
 `
+const Box = styled.div`
+    display: flex;
+    gap: 1rem;
+    min-width: 150px;
 
+`
 const Sender = styled.div`
-    font-family: Ariel;
+    color: ${(props) => props.color};
+    font-size: 14px;
+    padding-left: 0.5rem;
+`
+
+const Time = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 10px;
 `
 
 const Content = styled.div`
-    width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    max-width: 100%;
+    padding:  0.1rem 1rem 0.1rem 1rem;
+    overflow-wrap: break-word;
+    font-size: 12px;
 `
 
-const ScrollToBottom = styled.div`
-
-`
+const ScrollToBottom = styled.div``
 
 interface Chat {
     room: {
         chat: {
             map(arg0: (item: {
                 sender: string,
-                content: string
+                color: string,
+                content: string,
+                timeStamp: string
             }, idx: number) => JSX.Element): import("react").ReactNode;
         }
     }
 }
 
-const ChatView = () => {
-    const chat = useSelector((state: Chat) => state.room.chat)
-    const messageRef = useRef<HTMLInputElement>(null);
+interface CurrentRoom {
+    room: {
+        currentRoom: string
+    }
+}
 
+const ChatView = () => {
+    const chat = useSelector((state: Chat) => state.room.chat);
+    const currentRoom = useSelector((state: CurrentRoom) => state.room.currentRoom);
+    const messageRef = useRef<HTMLInputElement>(null);
+    
     useEffect(() => {
         messageRef.current?.scrollIntoView();
-    }, [chat])
+    }, [chat]);
 
     return (
         <Window>
-            <Messages>
+            <LobbyTitle>{currentRoom}</LobbyTitle>
+            <Container>
                 { chat &&
-                    chat.map((item, idx) => {
+                    chat.map(({ sender, color, timeStamp, content }, idx) => {
                         return (
                             <Message key={idx}>
-                                <Sender>
-                                    { item.sender }
-                                </Sender>
+                                <Box>
+                                    <Sender color={color}>
+                                        { sender }
+                                    </Sender>
+                                    <Time>
+                                        { timeStamp }
+                                    </Time>
+                                </Box>
                                 <Content>
-                                    { item.content }
+                                    { content }
                                 </Content>
                             </Message>
                         )
                     })
                 }
                 <ScrollToBottom ref={messageRef}/>
-            </Messages>
-            <UserList />
+            </Container>
             <MessageInput />
         </Window>
         

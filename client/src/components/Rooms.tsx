@@ -8,51 +8,50 @@ import socket from "../socket";
 import { findAndRemoveUser } from "../helperFunctions";
 
 const RoomsContainer = styled.div`
+    grid-area: room-container;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    padding: 0.1rem;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1rem;
+    border-right: 1px solid rgb(234, 234, 234);
 `
 
+interface Active {
+    active: boolean
+}
+
 const Room = styled.button`
-    border: none;
-    border: 1px solid grey;
-    background-color: white;
+    border-radius: 10px;
+    border: 1px solid rgb(41, 41, 41);
+    background-color: rgb(41, 41, 41);
     padding: 1rem;
+    color: white;
+    cursor: pointer;
 `
+
 
 export interface User {
     user: {
         username: string
+        color: string
     }
 }
-
-// interface PreviousRoom {
-//     room: {
-//         previousRoom: string
-//     }
-// }
-
-// export interface RoomUsers {
-//     room: {
-//         roomUsers: string[]
-//     }
-// }
 
 interface Room {
     room: {
         previousRoom: string
         currentRoom: string
-        roomUsers: string[]
+        roomUsers: {}[]
     }
 }
 
 const Rooms = () => {
-    const username = useSelector((state: User) => state.user.username)
+    const user = useSelector((state: User) => state.user)
     const previousRoom = useSelector((state: Room) => state.room.previousRoom);
     const currentRoom = useSelector((state: Room) => state.room.currentRoom);
     const dispatch = useDispatch();
-
+    console.log(`[ROOMS]: componenet rendered`)
     const joinRoom = (room: string) => {
         dispatch(joinedRoom(room));
     }
@@ -61,7 +60,7 @@ const Rooms = () => {
         if ( previousRoom !== '' ){
             const updateUserList = findAndRemoveUser();
             socket.emit('remove-room-user', { previousRoom, updateUserList });
-            socket.emit('join-room', { username, currentRoom });
+            socket.emit('join-room', { user, currentRoom });
         }
     }, [currentRoom])
 

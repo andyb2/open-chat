@@ -27,25 +27,23 @@ app.post('/create-user', (req, res) => {
 
 io.on('connection', (socket) => {
 
-  socket.on('create-user', ( username ) => {
+  socket.on('create-user', (userData) => {
+    const { username } = userData;
     connectedUsers.set(socket.id, username);
-
     if ( !roomData['general-lobby'] ) {
       roomData['general-lobby'] = [];
     }
-
-    roomData['general-lobby'].push(username);
+    roomData['general-lobby'].push(userData);
     const usersInRoom = roomData['general-lobby'];
     socket.join('general-lobby');
-
     io.to('general-lobby').emit('join-room', usersInRoom);
   });
 
-  socket.on('join-room', ({ username, currentRoom }) => {
+  socket.on('join-room', ({ user, currentRoom }) => {
     if ( !roomData[`${ currentRoom }`] ) {
       roomData[`${ currentRoom }`] = [];
     } 
-    roomData[`${ currentRoom }`].push( username );
+    roomData[`${ currentRoom }`].push( user );
     const usersInRoom = roomData[`${ currentRoom }`];
     socket.join(`${ currentRoom }`);
     io.in(`${ currentRoom }`).emit("join-room", usersInRoom);
@@ -54,30 +52,36 @@ io.on('connection', (socket) => {
 
   socket.on('remove-room-user', ({ previousRoom, updateUserList }) => {
     roomData[`${ previousRoom }`] = updateUserList;
-    console.log(roomData[`${ previousRoom }`]);
     socket.leave(`${ previousRoom }`)
     io.in(`${ previousRoom }`).emit('remove-room-user', updateUserList);
   })
 
-  socket.on('new-message', ({ message, currentRoom, username }) => {
-    io.to(`${ currentRoom }`).emit('new-message', { message, username })
+  socket.on('new-message', ({ message, currentRoom, user, timeOfMessage }) => {
+    console.log(`RAN FROM SERVER`)
+    io.in(`${ currentRoom }`).emit('message', { message, user, timeOfMessage })
   })
 
   socket.on('disconnect', () => {
     const ID = socket.id;
     const findDisconnectedUser = connectedUsers.get(ID);
-    let data = [];
-    let roomNumber = '';
     if (findDisconnectedUser) {
-      connectedUsers.delete(ID);
+      let data = [];
+      let roomNumber = '';
+      let idx = 0;
       for (const room in roomData) {
-        if ( roomData[room].includes(findDisconnectedUser) ) {
-          const user = roomData[room].indexOf(findDisconnectedUser);
-          roomData[room].splice(user, 1);
-          data = roomData[room];
-          roomNumber = room;
+        if ( roomData[room].length > 0 ) {
+          for (const user in roomData[room]) {
+            if (roomData[room][user].username === findDisconnectedUser) {
+              roomData[room].splice(idx, 1);
+              data = roomData[room];
+              roomNumber = room;
+            }
+            idx++
+          }
+          idx=0;
         }
       }
+      connectedUsers.delete(ID);
       io.in(`${ roomNumber }`).emit('remove-room-user', data);
     }
   });

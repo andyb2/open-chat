@@ -1,13 +1,17 @@
+import { useRef, useState } from "react";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import socket from "../socket";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import Picker from "emoji-picker-react";
+import moment from "moment";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFaceSmile } from "@fortawesome/free-solid-svg-icons";
 
 
 const MessageParent = styled.div`
     min-height: 8vh;
     grid-area: message-input;
-    // border: 1px solid blue;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -17,26 +21,26 @@ const DeliveryContainer = styled.div`
     display: flex;
     justify-content: center;
     width: 100%;
-    // border: 1px solid green;
+`
+
+const Form = styled.form`
+    display: flex;
+    width: 100%;
+    max-width: 500px;
 `
 
 const Input = styled.input`
-    min-height: 30px;
-    width: 85%;
-    padding-left: 1rem;
-    border: 1px solid;
-    border-color: black rgb(0, 166, 255) black black;
-    border-radius: 25px 0 0 25px;
-`
-
-const Button = styled.button`
-    padding: 0;
-    padding: 0 1rem 0 1rem;
-    border: 1px solid rgb(0, 166, 255);
-    border-radius: 0 25px 25px 0;
-    background-color: rgb(0, 166, 255);
+    min-height: 25px;
+    width: 100%;
+    padding: 0 0.5rem 0 0.5rem;
+    border: none;
+    border-radius: 25px;
+    background-color: rgb(50, 50, 50);
     color: white;
-    // width: 100%;
+    &:focus {
+        outline: none;
+        border: 1px solid grey;
+    }
 `
 
 interface Room {
@@ -51,23 +55,43 @@ interface User {
     }
 }
 
+const errors = {
+    maxLength: {
+        value: 500,
+        message: 'Message length is too long',
+    },
+}
+
 const MessageInput = () => {
-    const { register, handleSubmit, reset } = useForm();
+    const [ emoji, setEmoji ] = useState<{} | null >(null)
+    const inputRef = useRef<HTMLInputElement>(null);
+    const { register, handleSubmit, reset, setValue, getValues } = useForm();
     const currentRoom = useSelector((state: Room) => state.room.currentRoom);
-    const username = useSelector((state: User) => state.user.username);
+    const user = useSelector((state: User) => state.user);
 
     const onSubmit = handleSubmit(({ message }) => {
-        socket.emit('new-message', { message, currentRoom, username });
+        console.log(`message`)
+        const timeOfMessage = moment().format("MMM Do, YYYY h:mm A");
+        if (message.trim() !== '') {
+            socket.emit('new-message', { message, currentRoom, user, timeOfMessage });
+        }
         reset({message: ''});
     })
+
+    const selectedEmoji = (event: any, emojiObject: { emoji: string }) => {
+        // setEmoji(emojiObject.emoji);
+        const inputValue = getValues('message');
+        setValue('message', `${inputValue}${emojiObject.emoji}`)
+    }
 
     return (
         <MessageParent>
             <DeliveryContainer>
-            <form style={{display: 'flex'}}>
-                <Input {...register('message' )} placeholder='Enter Username' autoComplete='off' />
-                <Button onClick={onSubmit}>Send</Button>
-            </form>
+            <Form onSubmit={onSubmit}>
+                <Input {...register('message' , errors)} placeholder='' autoComplete='off' />
+                <FontAwesomeIcon icon={ faFaceSmile }/>
+            </Form>
+            <Picker onEmojiClick={selectedEmoji} pickerStyle={{position: 'fixed', bottom: '70px', right: '450px'}}/>
             </DeliveryContainer>
         </MessageParent>
     )

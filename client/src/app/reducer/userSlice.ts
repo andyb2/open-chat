@@ -1,11 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 export interface User {
-  username: string
+    username: string
+    color: string
 }
 
 const initialState: User = {
-  username: '',
+    username: '',
+    color: ''
 };
 
 export const userSlice = createSlice({
@@ -13,9 +15,9 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     user: (state, action) => {
-      const stateCopy = {...state};
-      stateCopy.username = action.payload;
-      state.username = stateCopy.username;
+      const { username, color } = action.payload;
+      state.username = username;
+      state.color = color;
     }
   }
 });

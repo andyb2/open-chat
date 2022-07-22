@@ -5,12 +5,11 @@ import Chat from './page/Chat';
 import styled from 'styled-components';
 
 const Container = styled.div`
-  height: 100vh;
-  width: 100vw;
+  height: 100%;
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid red;
 `
 
 export interface Username {
@@ -21,7 +20,7 @@ export interface Username {
 
 const App = () => {
   const { username } = useSelector((state: Username) => state.user) || {};
-  
+  console.log(username)
   return (
     <Container>
       { !username ? <UserCreate /> : <Chat /> }

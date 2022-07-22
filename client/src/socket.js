@@ -10,9 +10,10 @@ socket.on('connect', () => {
         store.dispatch(userList(usersInRoom));
     });
 
-    socket.on('new-message', ({ message, username }) => {
-        store.dispatch(messages({ message, username }));
-    })
+    socket.on('message', ({ message, user, timeOfMessage }) => {
+        console.log(`RAN FROM CLIENT`, store);
+        store.dispatch(messages({ message, user, timeOfMessage }));
+    });
 
     socket.on('remove-room-user', (roomData) => {
         store.dispatch(removeUser(roomData));

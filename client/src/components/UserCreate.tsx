@@ -4,8 +4,13 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { user } from '../app/reducer/userSlice';
 import socket from '../socket';
+import { randomUserColorChoice } from '../helperFunctions';
 
 const Parent = styled.div`
+    // height: 100vh;
+    // width: 100vw;
+    height: 100%;
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -58,8 +63,13 @@ const UserCreate = () => {
     const dispatch = useDispatch();
     
     const onSubmit = handleSubmit( async ({ username }) => {
-            dispatch(user(username));
-            socket.emit('create-user', username)
+            const randomColor = randomUserColorChoice();
+            const userData = {
+                username: username,
+                color: randomColor
+            }
+            dispatch(user(userData));
+            socket.emit('create-user', userData);
     });
 
     const isUnique = async (username: string) => {

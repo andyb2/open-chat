@@ -3,8 +3,8 @@ import { createSlice } from '@reduxjs/toolkit';
 export interface JoinedUser {
   currentRoom: string
   previousRoom: string
-  roomUsers: string[]
-  chat: object[]
+  roomUsers: []
+  chat: {}[]
 }
 
 const initialState: JoinedUser = {
@@ -25,15 +25,19 @@ export const roomSlice = createSlice({
     },
     userList: (state, action) => {
       state.roomUsers = action.payload;
+      console.log(`USUSUSUSUUERS`, action.payload)
     }, 
     removeUser: (state, action) => {
       state.roomUsers = action.payload;
     },
     messages: (state, action) => {
-      const { message, username } = action.payload;
+      console.log(`CHHHHAT`, action.payload)
+      const { message, user, timeOfMessage } = action.payload;
       const messageObject = {
-        sender: username,
-        content: message
+        sender: user.username,
+        color: user.color,
+        timeStamp: timeOfMessage,
+        content: message,
       }
       const chatCopy = [...state.chat];
       chatCopy.push({...messageObject});
