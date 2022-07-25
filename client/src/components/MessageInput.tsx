@@ -1,5 +1,5 @@
 import { useState } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { useForm } from "react-hook-form";
 import socket from "../socket";
 import { useSelector } from "react-redux";
@@ -7,21 +7,22 @@ import Picker from "emoji-picker-react";
 import moment from "moment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFaceSmile } from "@fortawesome/free-solid-svg-icons";
-
+import './picker.css';
 
 const MessageParent = styled.div`
-    min-height: 8vh;
     grid-area: message-input;
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 1rem 0.1rem 1rem 0.1rem;
 `
 
 const DeliveryContainer = styled.div`
     display: flex;
     justify-content: center;
+    align-items: center;
+    flex-direction: column;
     width: 100%;
-    height: 30px;
 `
 
 const Form = styled.form`
@@ -32,8 +33,6 @@ const Form = styled.form`
 `
 
 const Input = styled.input`
-    min-height: 25px;
-    // height: 30px;
     width: 100%;
     padding: 0 0 0 1rem;
     border: none;
@@ -43,7 +42,6 @@ const Input = styled.input`
     color: white;
     &:focus {
         outline: none;
-        // border: 1px solid grey;
     }
 `
 
@@ -55,7 +53,33 @@ const Emoji = styled.div`
     border-radius: 0 25px 25px 0;
     padding: 0.5rem;
     background-color: rgb(50, 50, 50);
+    cursor: pointer;
 `
+
+interface BoxProps {
+    active: boolean
+}
+
+const Box = styled.div<BoxProps>`
+    height: 250px;
+    max-height: 0;
+    transition: max-height 0.25s ease-out;
+    overflow: hidden;
+    ${(props) => props.active && css`
+        height: 250px;
+        max-height: 250px;
+        transition: max-height 0.25s ease-in;
+    `}
+`
+
+const emojiCategories = {
+    food_drink: false,
+    travel_places: false,
+    activities: false,
+    objects: false,
+    symbols: false,
+    flags: false,
+}
 
 interface Room {
     room: {
@@ -68,6 +92,7 @@ interface User {
         username: string
     }
 }
+
 
 const errors = {
     maxLength: {
@@ -94,7 +119,6 @@ const MessageInput = () => {
     const selectedEmoji = (event: any, emojiObject: { emoji: string }) => {
         const inputValue = getValues('message');
         setValue('message', `${inputValue}${emojiObject.emoji}`);
-        setRenderPicker(false);
         setFocus('message');
     }
 
@@ -109,7 +133,9 @@ const MessageInput = () => {
                     <Input {...register('message' , errors)} placeholder='' autoComplete='off' />
                     <Emoji onClick={() => activatePicker()}> <FontAwesomeIcon icon={ faFaceSmile }/> </Emoji>
                 </Form>
-                { renderPicker && <Picker onEmojiClick={selectedEmoji} native={true} preload={true} pickerStyle={{position: 'fixed', bottom: '70px', right: '450px'}}/> }
+                <Box active={renderPicker}>
+                    <Picker onEmojiClick={selectedEmoji} preload={true} pickerStyle={{height: '100%'}} groupVisibility={emojiCategories} />
+                </Box>
             </DeliveryContainer>
         </MessageParent>
     )

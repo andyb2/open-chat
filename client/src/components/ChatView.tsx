@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import MessageInput from "./MessageInput";
 
 const Window = styled.div`
@@ -8,6 +8,7 @@ const Window = styled.div`
     flex-direction: column;
     height: 100%;
     width: 100%;
+    min-width: 300px;
     overflow: auto;
 `
 
@@ -22,15 +23,15 @@ const LobbyTitle = styled.h1`
     color: white;
     background-color: black;
 `
+
 const Container = styled.div`  
-    width: 100%;
-    height: 100%;
-    overflow-y: scroll;
+    grid-area: messages-view;    
     display: flex;
     flex-direction: column;
-    grid-area: messages-view;
-    border-bottom: 1px solid rgb(234, 234, 234);
+    width: 100%;
+    height: 100%;
     background-color: rgb(41, 41, 41);
+    overflow-y: scroll;
 `
 
 const Message = styled.div`
@@ -40,7 +41,7 @@ const Message = styled.div`
 `
 const Box = styled.div`
     display: flex;
-    gap: 1rem;
+    gap: 0.5rem;
     min-width: 150px;
 
 `
@@ -119,8 +120,7 @@ const ChatView = () => {
                 <ScrollToBottom ref={messageRef}/>
             </Container>
             <MessageInput />
-        </Window>
-        
+        </Window>        
     )
 }
 

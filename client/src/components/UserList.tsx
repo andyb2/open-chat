@@ -3,17 +3,23 @@ import styled from "styled-components";
 
 const UsersContainer = styled.div`
     grid-area: user-list;
-    border-left: 1px solid rgb(234, 234, 234);
-    padding: 0.2rem;
     text-align: center;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    padding-right: 1rem;
 `
 
 const UsersTitle = styled.h1`
     color: white;
     margin: 0;
     line-height: 1;
-    font-size: 20px;
     padding: 1rem;
+`
+
+const List = styled.div`
+    overflow-y: scroll;
+    background-color: black;  
 `
 
 const User = styled.div`
@@ -21,7 +27,6 @@ const User = styled.div`
     font-size: 13px;
     padding: 0.1rem;
     cursor: pointer;
-    // border-bottom: 1px solid grey;
     &:hover {
         font-size: 14px;
     }
@@ -41,18 +46,19 @@ interface JoinedUser {
 
 const UserList = () => {
     const roomUsers = useSelector((state: JoinedUser) => state.room.roomUsers);
-    console.log(`[USERLIST]: componenet rendered`);
+
     return (
         <UsersContainer>
-            <UsersTitle>Users</UsersTitle>
-            {roomUsers.map(({ username, color }, idx) => {
-                {console.log(`USERLIST`, username)}
-                return (
-                    <User color={color} key={`${username} ${idx}`}>
-                        {username}
-                    </User>
-                )
-            })}
+            <UsersTitle>users</UsersTitle>
+            <List>
+                {roomUsers.map(({ username, color }, idx) => {
+                    return (
+                        <User color={color} key={`${username} ${idx}`}>
+                            {username}
+                        </User>
+                    )
+                })}
+            </List>
         </UsersContainer>
     )
 }

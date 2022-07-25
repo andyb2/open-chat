@@ -7,14 +7,13 @@ import { joinedRoom } from "../app/reducer/roomSlice";
 import socket from "../socket";
 import { findAndRemoveUser } from "../helperFunctions";
 
-const RoomsContainer = styled.div`
+const RoomsContainer = styled.nav`
     grid-area: room-container;
     display: flex;
     flex-direction: column;
     justify-content: center;
     gap: 1rem;
-    padding: 1rem;
-    border-right: 1px solid rgb(234, 234, 234);
+    padding-left: 1rem;
 `
 
 interface Active {

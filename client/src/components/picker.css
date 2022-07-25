@@ -1,0 +1,43 @@
+.emoji-picker-react .emoji-group:before {
+    font-size: 12px;
+    line-height: 1.5;
+    padding: 0.5rem 0 0.5rem 0;
+    background-color: black;;
+}
+
+aside.emoji-picker-react .content-wrapper:before {
+    display: none;
+}
+
+.emoji-picker-react input.emoji-search {
+    border: 1px solid grey;
+    line-height: 1;
+    max-height: 35px;
+    background-color: rgb(41, 41, 41);
+    color: white;
+}
+
+.active-category-indicator {
+    display: none;
+}
+
+aside.emoji-picker-react {
+    background-color: black;
+    border: none;
+    box-shadow: none;
+}
+
+aside.emoji-picker-react {
+    padding: 1rem 0 0 0;
+    min-width: 100%;
+    width: 100%;
+}
+
+.emoji-group {
+    display: flex;
+
+}
+
+.emoji-picker-react .emoji-categories {
+    display: none;
+}

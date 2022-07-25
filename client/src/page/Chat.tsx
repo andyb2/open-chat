@@ -9,6 +9,8 @@ const Grid = styled.div`
     grid-template-columns: 200px 1fr 200px;
     height: 100%;
     width: 100%;
+    max-width: 1200px;
+    gap: 1rem;
 `
 
 const Chat = () => {
