@@ -57,7 +57,6 @@ io.on('connection', (socket) => {
   })
 
   socket.on('new-message', ({ message, currentRoom, user, timeOfMessage }) => {
-    console.log(`RAN FROM SERVER`)
     io.in(`${ currentRoom }`).emit('message', { message, user, timeOfMessage })
   })
 
