@@ -1,5 +1,7 @@
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
+import { privateMessages } from "../app/reducer/roomSlice";
+import socket from "../socket";
 
 const UsersContainer = styled.div`
     grid-area: user-list;
@@ -38,23 +40,36 @@ interface JoinedUser {
             map(arg0: (data: {
                 username: string,
                 color: string,
+                socketId: string,
             }, idx: number) => JSX.Element): import("react").ReactNode;
         }
     }
     
 }
 
+interface Room {
+    room: {
+        privateRooms: {}
+    }
+}
+
 const UserList = () => {
     const roomUsers = useSelector((state: JoinedUser) => state.room.roomUsers);
+    const dispatch = useDispatch();
+
+    const openPrivateChat = (socketId: string, username: string) => {
+        dispatch(privateMessages({ socketId, username }));
+        // socket.emit('private-message', socketId);
+    }
 
     return (
         <UsersContainer>
             <UsersTitle>users</UsersTitle>
             <List>
-                {roomUsers.map(({ username, color }, idx) => {
+                {roomUsers.map(({ username, color, socketId }, idx) => {
                     return (
-                        <User color={color} key={`${username} ${idx}`}>
-                            {username}
+                        <User onClick={() => openPrivateChat(socketId, username)} color={color} key={`${username} ${idx}`}>
+                            { username } 
                         </User>
                     )
                 })}

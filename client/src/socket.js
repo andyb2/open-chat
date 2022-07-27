@@ -11,7 +11,6 @@ socket.on('connect', () => {
     });
 
     socket.on('message', ({ message, user, timeOfMessage }) => {
-        console.log(`RAN FROM CLIENT`, store);
         store.dispatch(messages({ message, user, timeOfMessage }));
     });
 

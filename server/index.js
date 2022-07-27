@@ -29,11 +29,16 @@ io.on('connection', (socket) => {
 
   socket.on('create-user', (userData) => {
     const { username } = userData;
+    const socketId = socket.id;
+    const client = {
+      socket: socketId,
+      ...userData
+    }
     connectedUsers.set(socket.id, username);
     if ( !roomData['general-lobby'] ) {
       roomData['general-lobby'] = [];
     }
-    roomData['general-lobby'].push(userData);
+    roomData['general-lobby'].push(client);
     const usersInRoom = roomData['general-lobby'];
     socket.join('general-lobby');
     io.to('general-lobby').emit('join-room', usersInRoom);
@@ -54,10 +59,14 @@ io.on('connection', (socket) => {
     roomData[`${ previousRoom }`] = updateUserList;
     socket.leave(`${ previousRoom }`)
     io.in(`${ previousRoom }`).emit('remove-room-user', updateUserList);
-  })
+  });
 
   socket.on('new-message', ({ message, currentRoom, user, timeOfMessage }) => {
     io.in(`${ currentRoom }`).emit('message', { message, user, timeOfMessage })
+  });
+
+  socket.on('private-message', (socketId) => {
+    io.to(socketId).emit('private-message')
   })
 
   socket.on('disconnect', () => {

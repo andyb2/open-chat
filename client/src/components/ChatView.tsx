@@ -1,7 +1,9 @@
 import { useEffect, useRef } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import styled, { keyframes } from "styled-components";
+import { privateRoom } from "../app/reducer/roomSlice";
 import MessageInput from "./MessageInput";
+import PrivateRoom from "./PrivateRoom";
 
 const Window = styled.div`
     display: flex;
@@ -10,6 +12,10 @@ const Window = styled.div`
     width: 100%;
     min-width: 300px;
     overflow: auto;
+`
+
+const TabsContainer = styled.div`
+    display: flex;
 `
 
 const LobbyTitle = styled.h1`
@@ -79,16 +85,24 @@ interface Chat {
     }
 }
 
-interface CurrentRoom {
+interface Rooms {
     room: {
         currentRoom: string
+        privateMessages: {}[]
+        privateRoom: string
     }
 }
 
 const ChatView = () => {
+    const dispatch = useDispatch();
+    const privateRooms = useSelector((state: Rooms) => state.room.privateRoom);
     const chat = useSelector((state: Chat) => state.room.chat);
-    const currentRoom = useSelector((state: CurrentRoom) => state.room.currentRoom);
+    const currentRoom = useSelector((state: Rooms) => state.room.currentRoom);
     const messageRef = useRef<HTMLInputElement>(null);
+
+    const roomSelected = () => {
+        dispatch(privateRoom(''));
+    }
     
     useEffect(() => {
         messageRef.current?.scrollIntoView();
@@ -96,7 +110,12 @@ const ChatView = () => {
 
     return (
         <Window>
-            <LobbyTitle>{currentRoom}</LobbyTitle>
+            <TabsContainer>
+                <LobbyTitle onClick={() => roomSelected()}>{currentRoom}</LobbyTitle>
+                <>
+                    <PrivateRoom />
+                </>
+            </TabsContainer>
             <Container>
                 { chat &&
                     chat.map(({ sender, color, timeStamp, content }, idx) => {

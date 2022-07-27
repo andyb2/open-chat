@@ -109,6 +109,7 @@ const MessageInput = () => {
 
     const onSubmit = handleSubmit(({ message }) => {
         const timeOfMessage = moment().format("MMM Do, YYYY h:mm A");
+        
         if (message.trim() !== '') {
             socket.emit('new-message', { message, currentRoom, user, timeOfMessage });
         }
