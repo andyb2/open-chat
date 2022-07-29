@@ -7,14 +7,8 @@ import socket from '../socket';
 import { randomUserColorChoice } from '../helperFunctions';
 
 const Parent = styled.div`
-    // height: 100vh;
-    // width: 100vw;
-    // height: 100%;
-    // width: 100%;
     display: flex;
     flex-direction: column;
-    // justify-content: flex-start;
-    // align-items: center;
     border: 1px solid black;
     border-radius: 5px;
     padding: 2rem;
@@ -56,8 +50,6 @@ const Error = styled.p`
     color: red;
 `
 
-
-
 const errorHandles = {
     pattern: {
         value: /^[A-Za-z0-9]+$/i, 
@@ -75,7 +67,6 @@ const errorHandles = {
         value: true,
         message: 'Input required'
     }
-
 }
 
 const UserCreate = () => {

@@ -75,7 +75,7 @@ const ChatView = () => {
     const roomSelected = () => {
         dispatch(privateRoomName(''));
     }
-    console.log(`privateRoom`, privateRoom, `CREATED`, createdPrivate);
+
     return (
         <Window>
             <TabsContainer>
