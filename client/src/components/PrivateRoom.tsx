@@ -38,7 +38,7 @@ const PrivateRoom = () => {
     const openPrivateChat = (username: string, socketId: string) => {
             dispatch(privateRoomName({ username, socketId }));
     };
-    console.log(`PRORPORORPRPRPR`, privateRooms)
+    
     return (
         <PrivateContainer>
             { privateRooms && Object.keys(privateRooms).map((user, idx) => {
