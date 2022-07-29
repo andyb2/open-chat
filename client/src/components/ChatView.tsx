@@ -1,9 +1,11 @@
 import { useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import styled, { keyframes } from "styled-components";
-import { privateRoom } from "../app/reducer/roomSlice";
+import styled from "styled-components";
+import { createPrivateRoom, privateRoomName } from "../app/reducer/roomSlice";
+import { userSlice } from "../app/reducer/userSlice";
 import MessageInput from "./MessageInput";
 import PrivateRoom from "./PrivateRoom";
+import RoomMessages from "./RoomMessages";
 
 const Window = styled.div`
     display: flex;
@@ -16,6 +18,7 @@ const Window = styled.div`
 
 const TabsContainer = styled.div`
     display: flex;
+    gap: 1rem;
 `
 
 const LobbyTitle = styled.h1`
@@ -28,6 +31,7 @@ const LobbyTitle = styled.h1`
     padding: 1rem;
     color: white;
     background-color: black;
+    cursor: pointer;
 `
 
 const Container = styled.div`  
@@ -38,76 +42,40 @@ const Container = styled.div`
     height: 100%;
     background-color: rgb(41, 41, 41);
     overflow-y: scroll;
+    &::-webkit-scrollbar {
+        width: 7px;
+      }
+    &::-webkit-scrollbar-track {
+        background: black;
+      }
+    &::-webkit-scrollbar-thumb {
+        background: grey;
+        border-radius: 5px;
+      }
+    &::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
 `
-
-const Message = styled.div`
-    display: flex;
-    flex-direction: column;
-    padding: 0.2rem;
-`
-const Box = styled.div`
-    display: flex;
-    gap: 0.5rem;
-    min-width: 150px;
-
-`
-const Sender = styled.div`
-    color: ${(props) => props.color};
-    font-size: 14px;
-    padding-left: 0.5rem;
-`
-
-const Time = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 10px;
-`
-
-const Content = styled.div`
-    padding:  0.1rem 1rem 0.1rem 1rem;
-    overflow-wrap: break-word;
-    font-size: 12px;
-`
-
-const ScrollToBottom = styled.div``
-
-interface Chat {
-    room: {
-        chat: {
-            map(arg0: (item: {
-                sender: string,
-                color: string,
-                content: string,
-                timeStamp: string
-            }, idx: number) => JSX.Element): import("react").ReactNode;
-        }
-    }
-}
 
 interface Rooms {
     room: {
         currentRoom: string
-        privateMessages: {}[]
-        privateRoom: string
+        createPrivateRoom: {}[]
+        privateRoom: {}
+        privateMessages: {}
     }
 }
 
 const ChatView = () => {
     const dispatch = useDispatch();
-    const privateRooms = useSelector((state: Rooms) => state.room.privateRoom);
-    const chat = useSelector((state: Chat) => state.room.chat);
+    const privateRoom = useSelector((state: Rooms) => state.room.privateRoom);
+    const createdPrivate = useSelector((state: Rooms) => state.room.privateMessages)
     const currentRoom = useSelector((state: Rooms) => state.room.currentRoom);
-    const messageRef = useRef<HTMLInputElement>(null);
-
-    const roomSelected = () => {
-        dispatch(privateRoom(''));
-    }
     
-    useEffect(() => {
-        messageRef.current?.scrollIntoView();
-    }, [chat]);
-
+    const roomSelected = () => {
+        dispatch(privateRoomName(''));
+    }
+    console.log(`privateRoom`, privateRoom, `CREATED`, createdPrivate);
     return (
         <Window>
             <TabsContainer>
@@ -117,26 +85,9 @@ const ChatView = () => {
                 </>
             </TabsContainer>
             <Container>
-                { chat &&
-                    chat.map(({ sender, color, timeStamp, content }, idx) => {
-                        return (
-                            <Message key={idx}>
-                                <Box>
-                                    <Sender color={color}>
-                                        { sender }
-                                    </Sender>
-                                    <Time>
-                                        { timeStamp }
-                                    </Time>
-                                </Box>
-                                <Content>
-                                    { content }
-                                </Content>
-                            </Message>
-                        )
-                    })
+                {
+                    <RoomMessages />
                 }
-                <ScrollToBottom ref={messageRef}/>
             </Container>
             <MessageInput />
         </Window>        

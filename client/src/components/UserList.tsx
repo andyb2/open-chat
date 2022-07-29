@@ -1,7 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
-import { privateMessages } from "../app/reducer/roomSlice";
-import socket from "../socket";
+import { createPrivateRoom, privateRoomName } from "../app/reducer/roomSlice";
 
 const UsersContainer = styled.div`
     grid-area: user-list;
@@ -21,7 +20,20 @@ const UsersTitle = styled.h1`
 
 const List = styled.div`
     overflow-y: scroll;
-    background-color: black;  
+    background-color: black;
+    &::-webkit-scrollbar {
+        width: 7px;
+      }
+    &::-webkit-scrollbar-track {
+        background: black;
+      }
+    &::-webkit-scrollbar-thumb {
+        background: grey;
+        border-radius: 5px;
+      }
+    &::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
 `
 
 const User = styled.div`
@@ -40,35 +52,39 @@ interface JoinedUser {
             map(arg0: (data: {
                 username: string,
                 color: string,
-                socketId: string,
+                socket: string,
             }, idx: number) => JSX.Element): import("react").ReactNode;
         }
     }
     
 }
 
-interface Room {
-    room: {
-        privateRooms: {}
+interface User {
+    user: {
+        username: string
     }
 }
 
 const UserList = () => {
     const roomUsers = useSelector((state: JoinedUser) => state.room.roomUsers);
+    const user = useSelector((state: User) => state.user.username)
     const dispatch = useDispatch();
 
     const openPrivateChat = (socketId: string, username: string) => {
-        dispatch(privateMessages({ socketId, username }));
-        // socket.emit('private-message', socketId);
+        if ( user !== username) {
+            dispatch(createPrivateRoom({ username, socketId }));
+            dispatch(privateRoomName({ username, socketId }));
+        }
     }
 
     return (
         <UsersContainer>
             <UsersTitle>users</UsersTitle>
             <List>
-                {roomUsers.map(({ username, color, socketId }, idx) => {
+                {roomUsers.map(({ username, color, socket }, idx) => {
+                    
                     return (
-                        <User onClick={() => openPrivateChat(socketId, username)} color={color} key={`${username} ${idx}`}>
+                        <User onClick={() => openPrivateChat(socket, username)} color={color} key={`${username} ${idx}`}>
                             { username } 
                         </User>
                     )

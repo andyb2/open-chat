@@ -9,39 +9,54 @@ import { randomUserColorChoice } from '../helperFunctions';
 const Parent = styled.div`
     // height: 100vh;
     // width: 100vw;
-    height: 100%;
-    width: 100%;
+    // height: 100%;
+    // width: 100%;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
+    // justify-content: flex-start;
+    // align-items: center;
     border: 1px solid black;
     border-radius: 5px;
     padding: 2rem;
     font-size: 15px;
 `
 
+const Form = styled.form`
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 1rem;
+`
+
 const Title = styled.h1`
     margin: 0;
+    line-height: 1;
 `
 
 const Section = styled.section`
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
 `
 
 const Paragraph = styled.p`
     margin: 0;
 `
+const Input = styled.input`
+    border-radius: 15px;
+    border: none;
+    padding: 0.5rem;
+    font-size: 15px;
+    &:focus {
+        outline: none;
+    }
+`
 
 const Error = styled.p`
-    position: absolute;
-    // top: 0;
     color: red;
 `
 
-interface FormValues {
-    username: string
-}
+
 
 const errorHandles = {
     pattern: {
@@ -56,13 +71,17 @@ const errorHandles = {
         value: 15,
         message: 'Username can only be maximum 15 characters',
     },
+    required: {
+        value: true,
+        message: 'Input required'
+    }
+
 }
 
 const UserCreate = () => {
-    const { register, handleSubmit, reset, formState: { errors, isSubmitSuccessful } } = useForm<FormValues>();
+    const { register, handleSubmit, reset, formState: { errors, isSubmitSuccessful, isSubmitting } } = useForm();
     const dispatch = useDispatch();
-    
-    const onSubmit = handleSubmit( async ({ username }) => {
+    const onSubmit = handleSubmit(({ username }) => {
             const randomColor = randomUserColorChoice();
             const userData = {
                 username: username,
@@ -71,7 +90,7 @@ const UserCreate = () => {
             dispatch(user(userData));
             socket.emit('create-user', userData);
     });
-
+    
     const isUnique = async (username: string) => {
             const data = {
                 user: username
@@ -84,28 +103,34 @@ const UserCreate = () => {
                 body: JSON.stringify(data)
             });
             const response = await checkForUniqueUsername.json();
-
             if (!response) return 'Username already exists';
             return response;
     }
 
     useEffect(() => {
-        reset({username: ''})
+        if(!isSubmitting) {
+            // react hook form setFocus() having issues... querySelector is temp
+            document.querySelector('input')?.focus();
+        }
+    }, [isSubmitting])
+
+    useEffect(() => {
+        reset({username: ''});
     }, [isSubmitSuccessful]);
 
     return (
         <Parent>
-            <form onSubmit={onSubmit}>
+            <Form onSubmit={onSubmit}>
                 <Title>Create a username</Title>
                 <Section>
-                    <Paragraph>* Username can only be maximum 15 characters</Paragraph>
-                    <Paragraph>* Only letters and numbers are accepted</Paragraph>
+                    <Paragraph>Username can only be maximum 15 characters</Paragraph>
+                    <Paragraph>Only letters and numbers are accepted</Paragraph>
                 </Section>
-                <input {...register('username', {  ...errorHandles, validate: (input) => isUnique(input)}, )} placeholder='Enter Username' autoComplete='off' />
-                { errors?.username && <Error>{`* ${errors.username.message}`}</Error> }
-            </form>
+                <Input id='input' {...register('username', {  ...errorHandles, validate: (input) => isUnique(input) })} disabled={isSubmitting} placeholder='Enter Username' autoComplete='off' />
+            </Form>
+            { errors?.username && <Error>{`* ${errors.username.message}`}</Error> }
         </Parent>
     )
-}
 
+}
 export default UserCreate;

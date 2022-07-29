@@ -54,7 +54,9 @@ const Rooms = () => {
     const dispatch = useDispatch();
     
     const joinRoom = (room: string) => {
-        dispatch(joinedRoom(room));
+        if ( currentRoom !== room ) {
+            dispatch(joinedRoom(room));
+        }
     }
 
     useEffect(() => {

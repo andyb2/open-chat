@@ -6,9 +6,11 @@ export interface JoinedUser {
   roomUsers: []
   chat: {}[]
   privateMessages: {
-    [username: string]: {}
+    [username: string]: {
+      messages: {}[]
+    } 
   }
-  privateRoom: string
+  privateRoom: string | {}
 }
 
 const initialState: JoinedUser = {
@@ -35,17 +37,19 @@ export const roomSlice = createSlice({
       state.roomUsers = action.payload;
     },
 
-    privateMessages: (state, action) => {
+    createPrivateRoom: (state, action) => {
       const { socketId, username } = action.payload;
-      const privateRoomObject = {
-        ...socketId,
-        ...username,
-        messages: []
-      };
-      state.privateMessages[username] = privateRoomObject;
+      if ( !state.privateMessages[username] ) {
+        const privateRoomObject = {
+          socketId: socketId,
+          username: username,
+          messages: []
+        };
+        state.privateMessages[username] = privateRoomObject;
+      }
     },
 
-    privateRoom: (state, action) => {
+    privateRoomName: (state, action) => {
       state.privateRoom = action.payload;
     },
 
@@ -54,19 +58,28 @@ export const roomSlice = createSlice({
     },
 
     messages: (state, action) => {
-      const { message, user, timeOfMessage } = action.payload;
+      const { message, user, timeOfMessage, privateMessage, activePrivateRoom } = action.payload;
+      const senderOrReceiver = activePrivateRoom ? activePrivateRoom.username : user.username;
       const messageObject = {
         sender: user.username,
         color: user.color,
         timeStamp: timeOfMessage,
         content: message,
       }
-      const chatCopy = [...state.chat];
-      chatCopy.push({...messageObject});
-      state.chat = chatCopy;
+      console.log(`ROOOOOOOM SLCIE`, privateMessage)
+      if ( !privateMessage ) {
+        const chatCopy = [...state.chat];
+        chatCopy.push({...messageObject});
+        state.chat = chatCopy;
+      } else {
+        const privateCopy = {...state.privateMessages}
+        privateCopy[senderOrReceiver].messages.push(messageObject);
+        state.privateMessages = privateCopy;
+      }
+      
     }
   }
 });
 
-export const { joinedRoom, userList, removeUser, messages, privateMessages, privateRoom } = roomSlice.actions;
+export const { joinedRoom, userList, removeUser, messages, createPrivateRoom, privateRoomName } = roomSlice.actions;
 export default roomSlice.reducer;

@@ -2,12 +2,13 @@ import { useState } from "react";
 import styled, { css } from "styled-components";
 import { useForm } from "react-hook-form";
 import socket from "../socket";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Picker from "emoji-picker-react";
 import moment from "moment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFaceSmile } from "@fortawesome/free-solid-svg-icons";
 import './picker.css';
+import { messages } from "../app/reducer/roomSlice";
 
 const MessageParent = styled.div`
     grid-area: message-input;
@@ -84,6 +85,9 @@ const emojiCategories = {
 interface Room {
     room: {
         currentRoom: string
+        privateRoom: {
+            socketId: string
+        }
     }
 }
 
@@ -102,22 +106,42 @@ const errors = {
 }
 
 const MessageInput = () => {
+    const dispatch = useDispatch();
     const [ renderPicker, setRenderPicker ] = useState<boolean>(false);
     const { register, handleSubmit, reset, setValue, getValues, setFocus } = useForm();
     const currentRoom = useSelector((state: Room) => state.room.currentRoom);
+    const activePrivateRoom = useSelector((state: Room) => state.room.privateRoom);
     const user = useSelector((state: User) => state.user);
 
     const onSubmit = handleSubmit(({ message }) => {
         const timeOfMessage = moment().format("MMM Do, YYYY h:mm A");
-        
+
         if (message.trim() !== '') {
-            socket.emit('new-message', { message, currentRoom, user, timeOfMessage });
+            if( activePrivateRoom ) {
+                console.log(`RNANANANN`)
+                socket.emit('private-message', { 
+                    message,
+                    room: activePrivateRoom,
+                    user, 
+                    timeOfMessage,
+                    sender: socket.id,
+                });
+                console.log(`ACIFIIRT`, activePrivateRoom)
+                dispatch(messages({ message, user, timeOfMessage, privateMessage: true, activePrivateRoom}));
+            } else {
+                socket.emit('new-message', { 
+                    message,
+                    room: currentRoom,
+                    user, 
+                    timeOfMessage,
+                });
+            } 
         }
         reset({message: ''});
         setRenderPicker(false);
     })
 
-    const selectedEmoji = (event: any, emojiObject: { emoji: string }) => {
+    const selectedEmoji = (event: {}, emojiObject: { emoji: string }) => {
         const inputValue = getValues('message');
         setValue('message', `${inputValue}${emojiObject.emoji}`);
         setFocus('message');

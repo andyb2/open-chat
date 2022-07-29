@@ -5,7 +5,7 @@ body, html, #root {
     width: 100%;
     margin: 0;
     font-family: '';
-    background: rgb(20, 20, 20);
+    background: rgb(0, 0, 0);
     color:rgb(230, 230, 230);
     font-family: 'Open Sans', sans-serif;
 }

@@ -1,11 +1,12 @@
 import { useSelector, useDispatch } from "react-redux";
-import { privateRoom } from "../app/reducer/roomSlice";
+import { privateRoomName } from "../app/reducer/roomSlice";
 import styled from "styled-components";
 
 const PrivateContainer = styled.div`
     display: flex;
     // justify-content: center;
     align-items: flex-end;
+    gap: 1rem;
 `
 
 const Username = styled.h1`
@@ -16,33 +17,34 @@ const Username = styled.h1`
     border: 1px solid grey;
     border-bottom: none;
     border-radius: 10px 10px 0 0;
+    cursor: pointer;
 `
 
 interface Rooms {
     room: {
-        privateRooms: {
-            map(arg0: (room: {
-                username: string,
-            }, idx: number) => JSX.Element): import("react").ReactNode;
+        privateMessages: {
+            [user: string]: {
+                username: string
+                socketId: string
+            }
         }
     }
 }
 
-
 const PrivateRoom = () => {
-    const privateRooms = useSelector((state: Rooms) => state.room.privateRooms);
+    const privateRooms = useSelector((state: Rooms) => state.room.privateMessages);
     const dispatch = useDispatch();
 
-    const openPrivateChat = (username: string) => {
-        dispatch(privateRoom(username));
+    const openPrivateChat = (username: string, socketId: string) => {
+            dispatch(privateRoomName({ username, socketId }));
     };
-
+    console.log(`PRORPORORPRPRPR`, privateRooms)
     return (
         <PrivateContainer>
-            { Object.keys(privateRooms).map((username, idx) => {
+            { privateRooms && Object.keys(privateRooms).map((user, idx) => {
                     return (
-                        <Username onClick={() => openPrivateChat(username)} key={`${username}${idx}`}>
-                            { username }
+                        <Username onClick={() => openPrivateChat(privateRooms[user].username, privateRooms[user].socketId)} key={`${privateRooms[user].username}${idx}`}>
+                            { privateRooms[user].username }
                         </Username>
                     )
                 }) 
