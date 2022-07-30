@@ -8,7 +8,6 @@ const UsersContainer = styled.div`
     overflow: auto;
     display: flex;
     flex-direction: column;
-    padding-right: 1rem;
 `
 
 const UsersTitle = styled.h1`

@@ -118,7 +118,6 @@ const MessageInput = () => {
 
         if (message.trim() !== '') {
             if( activePrivateRoom ) {
-                console.log(`RNANANANN`)
                 socket.emit('private-message', { 
                     message,
                     room: activePrivateRoom,
@@ -126,7 +125,6 @@ const MessageInput = () => {
                     timeOfMessage,
                     sender: socket.id,
                 });
-                console.log(`ACIFIIRT`, activePrivateRoom)
                 dispatch(messages({ message, user, timeOfMessage, privateMessage: true, activePrivateRoom}));
             } else {
                 socket.emit('new-message', { 

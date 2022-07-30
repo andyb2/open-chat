@@ -10,7 +10,7 @@ const Grid = styled.div`
     height: 100%;
     width: 100%;
     max-width: 1200px;
-    gap: 1rem;
+    gap: 0.5rem;
 `
 
 const Chat = () => {

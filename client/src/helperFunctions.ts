@@ -11,7 +11,6 @@ export const findAndRemoveUser = () => {
     const roomUsers: User[] = store.getState().room.roomUsers;
     const roomCopy = [...roomUsers];
     for (let idx=0; idx<roomUsers.length; idx++) {
-        console.log(roomUsers[idx].username);
         if (roomUsers[idx].username === username) {
             roomCopy.splice(idx, 1);
             break;

@@ -1,10 +1,11 @@
 const express = require('express');
+const path = require('path');
 const app = express();
 const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
-const PORT = 8080;
+const PORT = process.env.PORT || 8080;
 const { connectedUsers, roomData } = require('./users');
 
 const { json, urlencoded } = express;
@@ -12,9 +13,7 @@ const { json, urlencoded } = express;
 app.use(json());
 app.use(urlencoded({ extended: false }));
 
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
-});
+app.use(express.static(path.resolve(__dirname, '../client/build')))
 
 app.post('/create-user', (req, res) => {
   const { user } = req.body
@@ -94,6 +93,10 @@ io.on('connection', (socket) => {
       io.in(`${roomNumber}`).emit('remove-room-user', data);
     }
   });
+});
+
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
 });
 
 server.listen(PORT, () => {

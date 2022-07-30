@@ -13,16 +13,15 @@ const RoomsContainer = styled.nav`
     display: flex;
     flex-direction: column;
     align-items: center;
-    // justify-content: center;
-    gap: 1rem;
-    padding-left: 1rem;
+    overflow: auto;
+    gap: 0.5rem;
 `
 
-interface Active {
-    active: boolean
+interface RoomActive {
+    [room: string]: {}
 }
 
-const Room = styled.button`
+const Room = styled.button<RoomActive>`
     border-radius: 10px;
     border: 1px solid rgb(41, 41, 41);
     background-color: rgb(41, 41, 41);
@@ -30,42 +29,50 @@ const Room = styled.button`
     color: white;
     cursor: pointer;
     width: 100%;
+    &.active {
+        background-color: rgb(70, 70, 70);
+    }
 `
 
-const RoomList = styled.div`
+const RoomToggle = styled.div`
     cursor: pointer;
     border-top: 1px solid white;
     border-bottom: 1px solid white;
-    border-radius: 3px;
     padding: 1rem;
     text-align: center;
-    width: 90%;
-`
-
-const DirectMessagesContainer = styled.div`
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    width: 80%;
 `
 
 const Dm = styled.div`
     cursor: pointer;
     border-top: 1px solid white;
     border-bottom: 1px solid white;
-    border-radius: 3px;
     padding: 1rem;
     text-align: center;
-    width: 90%;
+    width: 80%;
 `
 
 const Box = styled.div`
-    // border: 1px solid white;
     width: 100%;
     margin-top: 1rem;
+    overflow: scroll;
+    display: flex;
+    flex-direction: column;
+    // gap: 1rem;
 `
 
+interface Active {
+    active: boolean
+}
+
+const RoomList = styled.div<Active>`
+    display: ${(props) => props.active ? 'flex' : 'none'};
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem;
+`
 
 export interface User {
     user: {
@@ -86,8 +93,8 @@ const Rooms = () => {
     const user = useSelector((state: User) => state.user)
     const previousRoom = useSelector((state: Room) => state.room.previousRoom);
     const currentRoom = useSelector((state: Room) => state.room.currentRoom);
+    const [ roomActive, setRoomActive ] = useState(false);
     const [ dmActive, setDmActive ] = useState(false);
-    const [roomActive, setRoomActive] = useState(false);
     
     const dispatch = useDispatch();
     
@@ -116,30 +123,32 @@ const Rooms = () => {
     return (
         <RoomsContainer>
             <Logo />
-            <RoomList onClick={() => showRoomsList()}>
-                Rooms
-            </RoomList>
-            {   
-                roomActive &&
-                    roomsList.map((room) => {
-                        return (
-                            <Room onClick={() => joinRoom(room)} key={room}>
-                                { room }
-                            </Room>
-                        )
-                    })
-            }
-            <DirectMessagesContainer>
+            <Box>
+                <RoomToggle onClick={() => showRoomsList()}>
+                    Rooms
+                </RoomToggle>
+                <RoomList active={roomActive}>
+                    {   
+                        roomActive &&
+                            roomsList.map((room) => {
+                                return (
+                                    <Room className={`${currentRoom === room ? 'active' : ''}`} onClick={() => joinRoom(room)} key={room}>
+                                        { room }
+                                    </Room>
+                                )
+                            })
+                    }
+                </RoomList>
                 <Dm onClick={() => showPrivateMessages()}>
                     Private Messages
                 </Dm>
-                { 
-                    dmActive &&
-                        <Box>
+                <RoomList active={dmActive}>
+                    { 
+                        dmActive &&
                             <DirectMessages />
-                        </Box> 
-                }
-            </DirectMessagesContainer>
+                    }
+                </RoomList>
+            </Box>
         </RoomsContainer>
     )
 }

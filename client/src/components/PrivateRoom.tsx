@@ -9,7 +9,7 @@ const PrivateContainer = styled.div`
     gap: 1rem;
 `
 
-const Username = styled.h1`
+const Username = styled.div`
     padding: 0.5rem;
     color: white;
     font-size: 15px;
@@ -18,6 +18,11 @@ const Username = styled.h1`
     border-bottom: none;
     border-radius: 10px 10px 0 0;
     cursor: pointer;
+    background-color: 'black';
+    &.active {
+        border: 1px solid rgb(70, 70, 70);
+        background-color: rgb(70, 70, 70);
+    }
 `
 
 interface Rooms {
@@ -27,12 +32,17 @@ interface Rooms {
                 username: string
                 socketId: string
             }
+        },
+        privateRoom: {
+            username: string
         }
     }
 }
 
 const PrivateRoom = () => {
     const privateRooms = useSelector((state: Rooms) => state.room.privateMessages);
+    const isPrivateRoomSelected = useSelector((state: Rooms) => state.room.privateRoom);
+    const { username } = isPrivateRoomSelected;
     const dispatch = useDispatch();
 
     const openPrivateChat = (username: string, socketId: string) => {
@@ -42,11 +52,13 @@ const PrivateRoom = () => {
     return (
         <PrivateContainer>
             { privateRooms && Object.keys(privateRooms).map((user, idx) => {
+                if ( username === privateRooms[user].username ) {
                     return (
-                        <Username onClick={() => openPrivateChat(privateRooms[user].username, privateRooms[user].socketId)} key={`${privateRooms[user].username}${idx}`}>
+                        <Username className={`${username === privateRooms[user].username ? 'active' : ''}`} onClick={() => openPrivateChat(privateRooms[user].username, privateRooms[user].socketId)} key={`${privateRooms[user].username}${idx}`}>
                             { privateRooms[user].username }
                         </Username>
                     )
+                }
                 }) 
             }
         </PrivateContainer>

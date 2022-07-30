@@ -21,7 +21,11 @@ const TabsContainer = styled.div`
     gap: 1rem;
 `
 
-const LobbyTitle = styled.h1`
+interface Active {
+    active: {}
+}
+
+const LobbyTitle = styled.h1<Active>`
     grid-area: room-title;
     display: flex;
     align-items: center;
@@ -30,7 +34,7 @@ const LobbyTitle = styled.h1`
     margin: 0;
     padding: 1rem;
     color: white;
-    background-color: black;
+    background-color: ${({active}) => !active ? 'rgb(70, 70, 70)' : 'black'};
     cursor: pointer;
 `
 
@@ -69,7 +73,7 @@ interface Rooms {
 const ChatView = () => {
     const dispatch = useDispatch();
     const privateRoom = useSelector((state: Rooms) => state.room.privateRoom);
-    const createdPrivate = useSelector((state: Rooms) => state.room.privateMessages)
+    // const createdPrivate = useSelector((state: Rooms) => state.room.privateMessages)
     const currentRoom = useSelector((state: Rooms) => state.room.currentRoom);
     
     const roomSelected = () => {
@@ -79,15 +83,13 @@ const ChatView = () => {
     return (
         <Window>
             <TabsContainer>
-                <LobbyTitle onClick={() => roomSelected()}>{currentRoom}</LobbyTitle>
+                <LobbyTitle active={privateRoom} onClick={() => roomSelected()}>{currentRoom}</LobbyTitle>
                 <>
                     <PrivateRoom />
                 </>
             </TabsContainer>
             <Container>
-                {
-                    <RoomMessages />
-                }
+                <RoomMessages />
             </Container>
             <MessageInput />
         </Window>        

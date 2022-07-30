@@ -55,6 +55,7 @@ export const roomSlice = createSlice({
 
     removeUser: (state, action) => {
       state.roomUsers = action.payload;
+      console.log(action.payload);
     },
 
     messages: (state, action) => {
@@ -66,7 +67,6 @@ export const roomSlice = createSlice({
         timeStamp: timeOfMessage,
         content: message,
       }
-      console.log(`ROOOOOOOM SLCIE`, privateMessage)
       if ( !privateMessage ) {
         const chatCopy = [...state.chat];
         chatCopy.push({...messageObject});
