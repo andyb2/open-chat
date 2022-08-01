@@ -76,10 +76,19 @@ export const roomSlice = createSlice({
         privateCopy[senderOrReceiver].messages.push(messageObject);
         state.privateMessages = privateCopy;
       }
-      
-    }
+    },
+    resetRoomState: () => initialState,
   }
 });
 
-export const { joinedRoom, userList, removeUser, messages, createPrivateRoom, privateRoomName } = roomSlice.actions;
+export const { 
+    joinedRoom,
+    userList,
+    removeUser,
+    messages,
+    createPrivateRoom,
+    privateRoomName,
+    resetRoomState,
+} = roomSlice.actions;
+
 export default roomSlice.reducer;
