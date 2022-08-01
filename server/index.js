@@ -7,6 +7,7 @@ const { Server } = require("socket.io");
 const io = new Server(server);
 const PORT = process.env.PORT || 8080;
 const { connectedUsers, roomData } = require('./users');
+const { Socket } = require('dgram');
 
 const { json, urlencoded } = express;
 
@@ -26,7 +27,7 @@ app.post('/create-user', (req, res) => {
 
 io.on('connection', (socket) => {
 
-  socket.on('create-user', (userData) => {
+  socket.once('create-user', (userData) => {
     const { username } = userData;
     const socketId = socket.id;
     const client = {
@@ -67,11 +68,12 @@ io.on('connection', (socket) => {
   socket.on('private-message', ({ message, room, user, timeOfMessage, sender }) => {
     const { socketId } = room;
     io.to(socketId).emit('message', { message, user, timeOfMessage, sender, privateMessage: true });
-  })
+  });
 
-  socket.on('disconnect', () => {
+  socket.once('disconnect', () => {
     const ID = socket.id;
     const findDisconnectedUser = connectedUsers.get(ID);
+    
     if (findDisconnectedUser) {
       let data = [];
       let roomNumber = '';
