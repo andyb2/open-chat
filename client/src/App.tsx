@@ -20,7 +20,7 @@ export interface Username {
 
 const App = () => {
   const { username } = useSelector((state: Username) => state.user) || {};
-  console.log(username)
+
   return (
     <Container>
       { !username ? <UserCreate /> : <Chat /> }
