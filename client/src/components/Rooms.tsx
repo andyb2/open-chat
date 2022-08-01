@@ -15,6 +15,9 @@ const RoomsContainer = styled.nav`
     align-items: center;
     overflow: auto;
     gap: 0.5rem;
+    @media (max-width: 768px) {
+        display: none;
+    }
 `
 
 interface RoomActive {

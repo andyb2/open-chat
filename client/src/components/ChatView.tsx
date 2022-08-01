@@ -1,8 +1,7 @@
-import { useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
-import { createPrivateRoom, privateRoomName } from "../app/reducer/roomSlice";
-import { userSlice } from "../app/reducer/userSlice";
+import { privateRoomName } from "../app/reducer/roomSlice";
+import Hamburger from "./Hamburger";
 import MessageInput from "./MessageInput";
 import PrivateRoom from "./PrivateRoom";
 import RoomMessages from "./RoomMessages";
@@ -19,6 +18,7 @@ const Window = styled.div`
 const TabsContainer = styled.div`
     display: flex;
     gap: 1rem;
+    justify-content: space-between;
 `
 
 interface Active {
@@ -42,15 +42,17 @@ const Container = styled.div`
     grid-area: messages-view;    
     display: flex;
     flex-direction: column;
+    padding: 0;
     width: 100%;
     height: 100%;
     background-color: rgb(41, 41, 41);
     overflow-y: scroll;
     &::-webkit-scrollbar {
         width: 7px;
+        background: rgb(41,41,41);
       }
     &::-webkit-scrollbar-track {
-        background: black;
+        background: rgb(41,41,41);
       }
     &::-webkit-scrollbar-thumb {
         background: grey;
@@ -70,11 +72,17 @@ interface Rooms {
     }
 }
 
+interface Width {
+    width: {
+        dimension: number
+    }
+}
+
 const ChatView = () => {
     const dispatch = useDispatch();
     const privateRoom = useSelector((state: Rooms) => state.room.privateRoom);
-    // const createdPrivate = useSelector((state: Rooms) => state.room.privateMessages)
     const currentRoom = useSelector((state: Rooms) => state.room.currentRoom);
+    const width = useSelector((state: Width) => state.width.dimension);
     
     const roomSelected = () => {
         dispatch(privateRoomName(''));
@@ -87,6 +95,7 @@ const ChatView = () => {
                 <>
                     <PrivateRoom />
                 </>
+                { width <= 768 && <Hamburger /> }
             </TabsContainer>
             <Container>
                 <RoomMessages />

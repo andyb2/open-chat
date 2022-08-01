@@ -1,3 +1,4 @@
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 import ChatView from "../components/ChatView";
 import Rooms from "../components/Rooms";
@@ -11,9 +12,14 @@ const Grid = styled.div`
     width: 100%;
     max-width: 1200px;
     gap: 0.5rem;
+    @media (max-width: 768px) {
+        grid-template-areas: 'messages-view';
+        grid-template-columns: 1fr;
+    }
 `
 
 const Chat = () => {
+
     return (
         <Grid>
             <Rooms />

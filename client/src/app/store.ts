@@ -1,11 +1,13 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import roomSlice from './reducer/roomSlice';
-import userReducer from './reducer/userSlice';
+import userSlice from './reducer/userSlice';
+import viewPortSlice from './reducer/viewPort';
 
 export const store = configureStore({
   reducer: {
-    user: userReducer,
+    user: userSlice,
     room: roomSlice,
+    width: viewPortSlice,
   },
 });
 

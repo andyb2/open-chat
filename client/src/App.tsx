@@ -1,6 +1,7 @@
 import { useSelector } from 'react-redux';
 import './App.css';
 import UserCreate from './components/UserCreate';
+import ViewPortWidth from "./components/ViewPortWidth";
 import Chat from './page/Chat';
 import styled from 'styled-components';
 
@@ -20,9 +21,10 @@ export interface Username {
 
 const App = () => {
   const { username } = useSelector((state: Username) => state.user) || {};
-
+  console.log(window.innerWidth);
   return (
     <Container>
+      <ViewPortWidth />
       { !username ? <UserCreate /> : <Chat /> }
     </Container>
   );
