@@ -16,11 +16,12 @@ export const userSlice = createSlice({
   reducers: {
     user: (state, action) => {
       const { username, color } = action.payload;
-      state.username = username;
-      state.color = color;
-    }
+        state.username = username;
+        state.color = color; 
+    },
+    resetUserState: () => initialState,
   }
 });
 
-export const { user } = userSlice.actions;
+export const { user, resetUserState } = userSlice.actions;
 export default userSlice.reducer;
