@@ -29,7 +29,7 @@ const Hamburger = () => {
     const dispatch = useDispatch();
 
     const toggleTheHamburgler = () => {
-        setActiveHam(prev => !prev);
+        setActiveHam(!mobile);
         dispatch(mobileViewSidebarToggle(!mobile))
     }
 
