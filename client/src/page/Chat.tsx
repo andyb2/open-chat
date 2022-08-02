@@ -8,6 +8,7 @@ const Grid = styled.div`
     display: grid;
     grid-template-areas: 'room-container messages-view user-list';
     grid-template-columns: 200px 1fr 200px;
+    grid-template-rows: 1fr;
     height: 100%;
     width: 100%;
     max-width: 1200px;
@@ -18,13 +19,19 @@ const Grid = styled.div`
     }
 `
 
-const Chat = () => {
+interface Width {
+    width: {
+        dimension: number
+    }
+}
 
+const Chat = () => {
+    const width = useSelector((state: Width) => state.width.dimension)
     return (
         <Grid>
-            <Rooms />
+           <Rooms />
             <ChatView />
-            <UserList />
+            { width >= 768 && <UserList /> }
         </Grid>
     )
 }

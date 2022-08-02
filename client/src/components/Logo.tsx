@@ -5,10 +5,12 @@ const LogoContainer = styled.div`
     justify-content: center;
     align-items: center;
     width: 100%;
+    
 `
 
 const OpenChat = styled.p`
-    font-size: 25px;
+    font-size: 20px;
+    
 `
 
 const Logo = () => {

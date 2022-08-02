@@ -73,7 +73,7 @@ io.on('connection', (socket) => {
   socket.once('disconnect', () => {
     const ID = socket.id;
     const findDisconnectedUser = connectedUsers.get(ID);
-    
+
     if (findDisconnectedUser) {
       let data = [];
       let roomNumber = '';
