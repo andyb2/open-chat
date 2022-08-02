@@ -38,10 +38,6 @@ const Content = styled.div`
     font-size: 12px;
 `
 
-const Color = styled.div`
-
-`
-
 const ScrollToBottom = styled.div``
 
 interface Chat {
@@ -53,7 +49,7 @@ interface Chat {
                 content: string,
                 timeStamp: string
             }, idx: number) => JSX.Element): import("react").ReactNode;
-        },
+        }
         currentRoom: string
     }
 }
