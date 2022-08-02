@@ -29,7 +29,7 @@ const RoomsContainer = styled.nav<Mobile>`
         top: 64px;
         z-index: 100;
         background-color: black;
-        width: 175px;
+        width: 195px;
     }
 `
 
@@ -70,9 +70,8 @@ const Dm = styled.div`
 `
 
 const Box = styled.div`
-    width: 100%;
-    // height: 100%;
-    margin-top: 1rem;
+    width: 85%;
+    margin-top: 0.5rem;
     overflow-y: scroll;
     display: flex;
     flex-direction: column;
@@ -103,7 +102,7 @@ const RoomList = styled.div<Active>`
     justify-content: center;
     align-items: center;
     gap: 0.5rem;
-    padding: 1rem;
+    padding: 0.5rem;
 `
 
 const UserContainer = styled.div`

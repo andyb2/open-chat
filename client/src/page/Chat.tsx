@@ -12,7 +12,6 @@ const Grid = styled.div`
     height: 100%;
     width: 100%;
     max-width: 1200px;
-    gap: 0.5rem;
     @media (max-width: 768px) {
         grid-template-areas: 'messages-view';
         grid-template-columns: 1fr;
@@ -29,7 +28,7 @@ const Chat = () => {
     const width = useSelector((state: Width) => state.width.dimension)
     return (
         <Grid>
-           <Rooms />
+            <Rooms />
             <ChatView />
             { width >= 768 && <UserList /> }
         </Grid>
