@@ -2,6 +2,12 @@ import { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 
+const Welcome = styled.h1`
+    margin: 0;
+    padding: 1rem 0 1rem 1rem;
+    font-size: 25px;
+`
+
 const Message = styled.div`
     display: flex;
     flex-direction: column;
@@ -32,6 +38,10 @@ const Content = styled.div`
     font-size: 12px;
 `
 
+const Color = styled.div`
+
+`
+
 const ScrollToBottom = styled.div``
 
 interface Chat {
@@ -44,6 +54,7 @@ interface Chat {
                 timeStamp: string
             }, idx: number) => JSX.Element): import("react").ReactNode;
         },
+        currentRoom: string
     }
 }
 
@@ -65,8 +76,9 @@ const RoomMessages = () => {
     const chatRoom = useSelector((state: Chat) => state.room.chat);
     const activePrivateRoom = useSelector((state: PrivateRoom) => state.room.privateRoom);
     const privateMessages = useSelector((state: PrivateRoom) => state.room.privateMessages);
+    const currentRoom = useSelector((state: Chat) => state.room.currentRoom);
     const messageRef = useRef<HTMLInputElement>(null);
-    const chat = activePrivateRoom ? privateMessages[activePrivateRoom.username].messages : chatRoom
+    const chat = activePrivateRoom ? privateMessages[activePrivateRoom.username].messages : chatRoom;
 
     useEffect(() => {
         messageRef.current?.scrollIntoView();
@@ -74,6 +86,7 @@ const RoomMessages = () => {
 
     return (
         <>
+        <Welcome>{`${activePrivateRoom ? `Chatting with ${activePrivateRoom.username}`: `Welcome to ${currentRoom}`}`}</Welcome>
         { 
             chat &&
                 chat.map(({ sender, color, timeStamp, content }, idx) => {
