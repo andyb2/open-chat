@@ -4,7 +4,6 @@ import styled from "styled-components";
 
 const PrivateContainer = styled.div`
     display: flex;
-    // justify-content: center;
     align-items: flex-end;
     gap: 1rem;
 `
@@ -13,10 +12,11 @@ const Username = styled.div`
     padding: 0.5rem;
     color: white;
     font-size: 15px;
+    width: 90px;
+    text-align: center;
     margin: 0;
     border: 1px solid grey;
     border-bottom: none;
-    border-radius: 10px 10px 0 0;
     cursor: pointer;
     background-color: 'black';
     &.active {

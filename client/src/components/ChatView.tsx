@@ -18,7 +18,7 @@ const Window = styled.div`
 const TabsContainer = styled.div`
     display: flex;
     gap: 1rem;
-    justify-content: space-between;
+    
 `
 
 interface Active {
