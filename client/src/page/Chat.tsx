@@ -1,3 +1,4 @@
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 import ChatView from "../components/ChatView";
 import Rooms from "../components/Rooms";
