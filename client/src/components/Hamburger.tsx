@@ -2,6 +2,8 @@ import styled from "styled-components";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { mobileViewSidebarToggle } from '../app/reducer/roomSlice';
 
 interface Active {
     active: boolean
@@ -15,11 +17,20 @@ const Container = styled.div<Active>`
     background-color: ${({ active }) => !active ? 'black' : 'rgb(50, 50, 50)'};
 `
 
+interface Mobile {
+    room: {
+        mobile: boolean
+    }
+}
+
 const Hamburger = () => {
     const [ activeHam, setActiveHam ] = useState(false);
+    const mobile = useSelector((state: Mobile) => state.room.mobile)
+    const dispatch = useDispatch();
 
     const toggleTheHamburgler = () => {
-        setActiveHam(prev => !prev);
+        setActiveHam(!mobile);
+        dispatch(mobileViewSidebarToggle(!mobile))
     }
 
     return (

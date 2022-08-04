@@ -11,6 +11,7 @@ export interface JoinedUser {
     } 
   }
   privateRoom: string | {}
+  mobile: boolean
 }
 
 const initialState: JoinedUser = {
@@ -20,6 +21,7 @@ const initialState: JoinedUser = {
   chat: [],
   privateMessages: {},
   privateRoom: '',
+  mobile: false,
 };
 
 export const roomSlice = createSlice({
@@ -77,6 +79,9 @@ export const roomSlice = createSlice({
         state.privateMessages = privateCopy;
       }
     },
+    mobileViewSidebarToggle: (state, action) => {
+      state.mobile = action.payload;
+    },
     resetRoomState: () => initialState,
   }
 });
@@ -88,6 +93,7 @@ export const {
     messages,
     createPrivateRoom,
     privateRoomName,
+    mobileViewSidebarToggle,
     resetRoomState,
 } = roomSlice.actions;
 

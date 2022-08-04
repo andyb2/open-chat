@@ -13,6 +13,9 @@ const Window = styled.div`
     width: 100%;
     min-width: 300px;
     overflow: auto;
+    // @media ( max-width: 768px ) {
+    //     align-items: center;  
+    // }
 `
 
 const TabsContainer = styled.div`

@@ -24,6 +24,10 @@ const DeliveryContainer = styled.div`
     align-items: center;
     flex-direction: column;
     width: 100%;
+    @media ( max-width: 768px ) {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
 `
 
 const Form = styled.form`
@@ -43,6 +47,10 @@ const Input = styled.input`
     color: white;
     &:focus {
         outline: none;
+    }
+    @media ( max-width: 900px ) {
+        border-radius: 25px 25px 25px 25px;
+        padding: 0.5rem 0.5rem 0.5rem 1rem;
     }
 `
 
@@ -97,6 +105,11 @@ interface User {
     }
 }
 
+interface Width {
+    width: {
+        dimension: number
+    }
+}
 
 const errors = {
     maxLength: {
@@ -111,6 +124,7 @@ const MessageInput = () => {
     const { register, handleSubmit, reset, setValue, getValues, setFocus } = useForm();
     const currentRoom = useSelector((state: Room) => state.room.currentRoom);
     const activePrivateRoom = useSelector((state: Room) => state.room.privateRoom);
+    const width = useSelector((state: Width) => state.width.dimension);
     const user = useSelector((state: User) => state.user);
 
     const onSubmit = handleSubmit(({ message }) => {
@@ -153,12 +167,15 @@ const MessageInput = () => {
         <MessageParent>
             <DeliveryContainer>
                 <Form onSubmit={onSubmit}>
-                    <Input {...register('message' , errors)} placeholder='' autoComplete='off' />
-                    <Emoji onClick={() => activatePicker()}> <FontAwesomeIcon icon={ faFaceSmile }/> </Emoji>
+                    <Input {...register('message' , errors)} placeholder='Send Message' autoComplete='off' />
+                    { width >= 900 && <Emoji onClick={() => activatePicker()}> <FontAwesomeIcon icon={ faFaceSmile }/> </Emoji> }
                 </Form>
-                <Box active={renderPicker}>
-                    <Picker onEmojiClick={selectedEmoji} preload={true} pickerStyle={{height: '100%'}} groupVisibility={emojiCategories} />
-                </Box>
+                {   
+                    width >= 900 &&
+                        <Box active={renderPicker}>
+                            <Picker onEmojiClick={selectedEmoji} preload={true} pickerStyle={{height: '100%'}} groupVisibility={emojiCategories} />
+                        </Box> 
+                }
             </DeliveryContainer>
         </MessageParent>
     )

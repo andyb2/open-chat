@@ -9,7 +9,7 @@ const UsersContainer = styled.div`
     display: flex;
     flex-direction: column;
     @media (max-width: 768px) {
-        display: none;
+        // display: none;
     }
 `
 
@@ -67,10 +67,18 @@ interface User {
     }
 }
 
+interface Width {
+    width: {
+        dimension: number
+    }
+}
+
 const UserList = () => {
     const roomUsers = useSelector((state: JoinedUser) => state.room.roomUsers);
     const user = useSelector((state: User) => state.user.username)
+    const width = useSelector((state: Width) => state.width.dimension);
     const dispatch = useDispatch();
+    
 
     const openPrivateChat = (socketId: string, username: string) => {
         if ( user !== username) {
@@ -81,7 +89,7 @@ const UserList = () => {
 
     return (
         <UsersContainer>
-            <UsersTitle>users</UsersTitle>
+            { width > 768 && <UsersTitle>users</UsersTitle> }
             <List>
                 {roomUsers.map(({ username, color, socket }, idx) => {
                     
