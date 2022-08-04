@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { mobileViewSidebarToggle } from '../app/reducer/roomSlice';
 
@@ -32,9 +32,12 @@ const Hamburger = () => {
     const dispatch = useDispatch();
 
     const toggleTheHamburgler = () => {
-        setActiveHam(!mobile);
         dispatch(mobileViewSidebarToggle(!mobile))
     }
+
+    useEffect(() => {
+        setActiveHam(mobile);
+    }, [mobile]);
 
     return (
         <Container active={activeHam} onClick={() => toggleTheHamburgler()}>
