@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import { privateRoomName } from "../app/reducer/roomSlice";
@@ -39,6 +40,9 @@ const LobbyTitle = styled.h1<Active>`
     color: white;
     background-color: ${({active}) => !active ? 'rgb(70, 70, 70)' : 'black'};
     cursor: pointer;
+    &:hover {
+        background-color: rgb(30, 30, 30);
+    }
 `
 
 const Container = styled.div`  

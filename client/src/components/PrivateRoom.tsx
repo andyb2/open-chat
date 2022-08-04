@@ -46,7 +46,7 @@ const PrivateRoom = () => {
     const dispatch = useDispatch();
 
     const openPrivateChat = (username: string, socketId: string) => {
-            dispatch(privateRoomName({ username, socketId }));
+        dispatch(privateRoomName({ username, socketId }));
     };
     
     return (

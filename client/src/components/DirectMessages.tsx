@@ -6,7 +6,7 @@ const Box = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1rem;
+    gap: 0.5rem;
     font-size: 13px;
     width: 100%;
 `
@@ -14,7 +14,6 @@ const Box = styled.div`
 const Dm = styled.button`
     border-radius: 10px;
     font-family: Arial;
-    // font-size: 12px;
     text-align: center;
     border: 1px solid rgb(41, 41, 41);
     background-color: rgb(41, 41, 41);
