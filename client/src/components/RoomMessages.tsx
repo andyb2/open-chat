@@ -4,8 +4,11 @@ import styled from "styled-components";
 
 const Welcome = styled.h1`
     margin: 0;
-    padding: 1rem 0 1rem 1rem;
+    padding: 1rem 1rem 1rem 1rem;
     font-size: 25px;
+    @media (max-width: 400px) {
+        font-size: 20px;
+    }
 `
 
 const Message = styled.div`
@@ -65,16 +68,18 @@ interface PrivateRoom {
                 messages: []
             }
         }
+        privateRoomIsActive: boolean
     }
 }
 
 const RoomMessages = () => {
     const chatRoom = useSelector((state: Chat) => state.room.chat);
-    const activePrivateRoom = useSelector((state: PrivateRoom) => state.room.privateRoom);
+    const privateRoom = useSelector((state: PrivateRoom) => state.room.privateRoom);
+    const activePrivateRoom = useSelector((state: PrivateRoom) => state.room.privateRoomIsActive);
     const privateMessages = useSelector((state: PrivateRoom) => state.room.privateMessages);
     const currentRoom = useSelector((state: Chat) => state.room.currentRoom);
     const messageRef = useRef<HTMLInputElement>(null);
-    const chat = activePrivateRoom ? privateMessages[activePrivateRoom.username].messages : chatRoom;
+    const chat = activePrivateRoom ? privateMessages[privateRoom.username].messages : chatRoom;
 
     useEffect(() => {
         messageRef.current?.scrollIntoView();
@@ -82,7 +87,7 @@ const RoomMessages = () => {
 
     return (
         <>
-        <Welcome>{`${activePrivateRoom ? `Chatting with ${activePrivateRoom.username}`: `Welcome to ${currentRoom}`}`}</Welcome>
+        <Welcome>{`${activePrivateRoom ? `Chatting with ${privateRoom.username}`: `Welcome to ${currentRoom}`}`}</Welcome>
         { 
             chat &&
                 chat.map(({ sender, color, timeStamp, content }, idx) => {

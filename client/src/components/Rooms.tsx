@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { roomsList } from "../roomList";
-import { joinedRoom } from "../app/reducer/roomSlice";
+import { joinedRoom, activePrivateRoom } from "../app/reducer/roomSlice";
 import socket from "../socket";
 import { findAndRemoveUser } from "../helperFunctions";
 import Logo from "./Logo";
@@ -47,6 +47,9 @@ const Room = styled.button<RoomActive>`
     width: 100%;
     overflow: auto;
     &.active {
+        background-color: rgb(70, 70, 70);
+    }
+    &:hover {
         background-color: rgb(70, 70, 70);
     }
 `
@@ -165,6 +168,7 @@ const Rooms = () => {
         if ( currentRoom !== room ) {
             dispatch(joinedRoom(room));
         }
+        dispatch(activePrivateRoom(false));
     }
 
     const showPrivateMessages = () => {

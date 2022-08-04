@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import { useForm } from "react-hook-form";
 import socket from "../socket";
@@ -96,6 +96,7 @@ interface Room {
         privateRoom: {
             socketId: string
         }
+        privateRoomIsActive: boolean
     }
 }
 
@@ -126,12 +127,13 @@ const MessageInput = () => {
     const activePrivateRoom = useSelector((state: Room) => state.room.privateRoom);
     const width = useSelector((state: Width) => state.width.dimension);
     const user = useSelector((state: User) => state.user);
+    const privateRoomIsActive = useSelector((state: Room) => state.room.privateRoomIsActive);
 
     const onSubmit = handleSubmit(({ message }) => {
         const timeOfMessage = moment().format("MMM Do, YYYY h:mm A");
 
         if (message.trim() !== '') {
-            if( activePrivateRoom ) {
+            if( privateRoomIsActive) {
                 socket.emit('private-message', { 
                     message,
                     room: activePrivateRoom,
@@ -162,6 +164,10 @@ const MessageInput = () => {
     const activatePicker = () => {
         setRenderPicker(prev => !prev);
     }
+
+    useEffect(()=> {
+        setFocus('message');
+    },[currentRoom, activePrivateRoom, privateRoomIsActive])
 
     return (
         <MessageParent>

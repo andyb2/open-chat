@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
-import { createPrivateRoom, privateRoomName } from "../app/reducer/roomSlice";
+import { createPrivateRoom, privateRoomName, activePrivateRoom } from "../app/reducer/roomSlice";
 
 const UsersContainer = styled.div`
     grid-area: user-list;
@@ -84,6 +84,7 @@ const UserList = () => {
         if ( user !== username) {
             dispatch(createPrivateRoom({ username, socketId }));
             dispatch(privateRoomName({ username, socketId }));
+            dispatch(activePrivateRoom(true));
         }
     }
 

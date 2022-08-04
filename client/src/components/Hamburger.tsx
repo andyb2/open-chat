@@ -15,6 +15,9 @@ const Container = styled.div<Active>`
     align-items: center;
     padding: 1rem;
     background-color: ${({ active }) => !active ? 'black' : 'rgb(50, 50, 50)'};
+    @media (max-width: 400px) {
+        padding: 0.5rem;
+    }
 `
 
 interface Mobile {

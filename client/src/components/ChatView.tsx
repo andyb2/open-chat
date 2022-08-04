@@ -1,10 +1,9 @@
-import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
-import { privateRoomName } from "../app/reducer/roomSlice";
+import { activePrivateRoom } from "../app/reducer/roomSlice";
 import Hamburger from "./Hamburger";
 import MessageInput from "./MessageInput";
-import PrivateRoom from "./PrivateRoom";
+import PrivateTab from "./PrivateTab";
 import RoomMessages from "./RoomMessages";
 
 const Window = styled.div`
@@ -21,8 +20,7 @@ const Window = styled.div`
 
 const TabsContainer = styled.div`
     display: flex;
-    gap: 1rem;
-    
+    // width: 100%;
 `
 
 interface Active {
@@ -34,14 +32,18 @@ const LobbyTitle = styled.h1<Active>`
     display: flex;
     align-items: center;
     line-height: 1;
-    padding-left: 1rem;
+    white-space: nowrap;
     margin: 0;
     padding: 1rem;
     color: white;
-    background-color: ${({active}) => !active ? 'rgb(70, 70, 70)' : 'black'};
+    background-color: ${({ active }) => active ? 'rgb(70, 70, 70)' : 'black'};
     cursor: pointer;
     &:hover {
-        background-color: rgb(30, 30, 30);
+        background-color: ${({ active }) => active ? 'rgb(70, 70, 70)' : 'rgb(30, 30, 30)'};
+    }
+    @media (max-width: 400px) {
+        font-size: 20px;
+        padding: 0.5rem;
     }
 `
 
@@ -70,12 +72,19 @@ const Container = styled.div`
       }
 `
 
+const Spacer = styled.div`
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+`
+
 interface Rooms {
     room: {
         currentRoom: string
         createPrivateRoom: {}[]
         privateRoom: {}
         privateMessages: {}
+        privateRoomIsActive: boolean
     }
 }
 
@@ -87,22 +96,22 @@ interface Width {
 
 const ChatView = () => {
     const dispatch = useDispatch();
-    const privateRoom = useSelector((state: Rooms) => state.room.privateRoom);
     const currentRoom = useSelector((state: Rooms) => state.room.currentRoom);
     const width = useSelector((state: Width) => state.width.dimension);
-    
+    const privateRoomIsActive = useSelector((state: Rooms) => state.room.privateRoomIsActive);
+
     const roomSelected = () => {
-        dispatch(privateRoomName(''));
+        dispatch(activePrivateRoom(false));
     }
 
     return (
         <Window>
             <TabsContainer>
-                <LobbyTitle active={privateRoom} onClick={() => roomSelected()}>{currentRoom}</LobbyTitle>
-                <>
-                    <PrivateRoom />
-                </>
-                { width <= 768 && <Hamburger /> }
+                <LobbyTitle active={!privateRoomIsActive} onClick={() => roomSelected()}>{currentRoom}</LobbyTitle>
+                <Spacer>
+                    <PrivateTab />
+                    { width <= 768 && <Hamburger /> }
+                </ Spacer>
             </TabsContainer>
             <Container>
                 <RoomMessages />

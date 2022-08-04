@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
-import { privateRoomName } from "../app/reducer/roomSlice";
+import { privateRoomName, activePrivateRoom } from "../app/reducer/roomSlice";
 
 const Box = styled.div`
     display: flex;
@@ -24,6 +24,9 @@ const Dm = styled.button`
     &.active {
         background-color: rgb(70, 70, 70);
     }
+    &:hover {
+        background-color: rgb(70, 70, 70);
+    }
 `
 
 interface Room {
@@ -33,21 +36,24 @@ interface Room {
             username: string
             socketId: string
           }
-        },
+        }
         privateRoom: {
             username: string
         }
+        privateRoomIsActive: boolean
     }
 }
 
 const DirectMessages = () => {
     const privateMessages = useSelector((state: Room) => state.room.privateMessages);
-    const activePrivateRoom = useSelector((state: Room) => state.room.privateRoom);
-    const { username } = activePrivateRoom;
+    const privateRoom = useSelector((state: Room) => state.room.privateRoom);
+    const privateRoomIsActive = useSelector((state: Room) => state.room.privateRoomIsActive)
+    const { username } = privateRoom;
     const dispatch = useDispatch();
 
     const renderExisitingPrivateChat = (username: string, socketId: string) => {
         dispatch(privateRoomName({ username, socketId }));
+        dispatch(activePrivateRoom(true));
     }
 
     return (
@@ -55,7 +61,7 @@ const DirectMessages = () => {
             {
                 Object.keys(privateMessages).map((user, idx) => {
                     return (
-                        <Dm className={`${username === privateMessages[user].username ? 'active' : ''}`} 
+                        <Dm className={`${privateRoomIsActive && username === privateMessages[user].username ? 'active' : ''}`} 
                             key={`${privateMessages[user].username}-${idx}`}
                             onClick={() => renderExisitingPrivateChat(privateMessages[user].username, privateMessages[user].socketId)}
                         >
