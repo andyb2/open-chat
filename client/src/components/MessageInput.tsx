@@ -8,7 +8,7 @@ import moment from "moment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFaceSmile } from "@fortawesome/free-solid-svg-icons";
 import './picker.css';
-import { messages } from "../app/reducer/roomSlice";
+import { messages, mobileViewSidebarToggle } from "../app/reducer/roomSlice";
 
 const MessageParent = styled.div`
     grid-area: message-input;
@@ -97,6 +97,7 @@ interface Room {
             socketId: string
         }
         privateRoomIsActive: boolean
+        mobile: boolean
     }
 }
 
@@ -125,6 +126,7 @@ const MessageInput = () => {
     const { register, handleSubmit, reset, setValue, getValues, setFocus } = useForm();
     const currentRoom = useSelector((state: Room) => state.room.currentRoom);
     const activePrivateRoom = useSelector((state: Room) => state.room.privateRoom);
+    const mobile = useSelector((state: Room) => state.room.mobile)
     const width = useSelector((state: Width) => state.width.dimension);
     const user = useSelector((state: User) => state.user);
     const privateRoomIsActive = useSelector((state: Room) => state.room.privateRoomIsActive);
@@ -167,6 +169,9 @@ const MessageInput = () => {
 
     useEffect(()=> {
         setFocus('message');
+        if ( mobile ) {
+            dispatch(mobileViewSidebarToggle(false))
+        }
     },[currentRoom, activePrivateRoom, privateRoomIsActive])
 
     return (
