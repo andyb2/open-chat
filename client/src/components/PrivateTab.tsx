@@ -36,9 +36,6 @@ const Username = styled.div`
 `
 
 const MissedMessageCounter = styled.div`
-    // position: absolute;
-    // left: 220px;
-    // top: 25px;
     border: 1px solid red;
     width: 16px;
     padding: 0.1rem;
