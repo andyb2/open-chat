@@ -114,7 +114,7 @@ const UserCreate = () => {
             <Form onSubmit={onSubmit}>
                 <Title>Create a username</Title>
                 <Section>
-                    <Paragraph>Username can only be maximum 15 characters</Paragraph>
+                    <Paragraph>Username can only be maximum 10 characters</Paragraph>
                     <Paragraph>Only letters and numbers are accepted</Paragraph>
                 </Section>
                 <Input id='input' {...register('username', {  ...errorHandles, validate: (input) => isUnique(input) })} disabled={isSubmitting} placeholder='Enter Username' autoComplete='off' />
