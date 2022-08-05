@@ -176,6 +176,8 @@ const MessageInput = () => {
     },[currentRoom, activePrivateRoom, privateRoomIsActive]);
 
     useEffect(() => {
+        document.ontouchmove = (e) => e.preventDefault();
+
         inputRef.current!.onfocus = () => {
             window.scrollTo(0, 0);
             document.body.scrollTop = 0;
