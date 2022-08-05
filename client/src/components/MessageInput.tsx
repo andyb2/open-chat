@@ -170,16 +170,9 @@ const MessageInput = () => {
 
     useEffect(()=> {
         if (width > 769) {
-            console.log(`ran`)
             setFocus('message');
         }
     },[currentRoom, activePrivateRoom, privateRoomIsActive]);
-
-    useEffect(() => {
-        inputRef.current?.addEventListener('touchmove', (e) => {
-            e.preventDefault();
-          });
-    });
 
     return (
         <MessageParent>
