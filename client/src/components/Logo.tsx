@@ -31,7 +31,7 @@ interface User {
 const Logo = () => {
     const username = useSelector((state: User) => state.user.username);
     const color = useSelector((state: User) => state.user.color);
-console.log(color)
+
     return (
         <LogoContainer>
             <OpenChat>
