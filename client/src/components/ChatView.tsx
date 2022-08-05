@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
-import { activePrivateRoom } from "../app/reducer/roomSlice";
+import { activePrivateRoom, mobileViewSidebarToggle } from "../app/reducer/roomSlice";
 import Hamburger from "./Hamburger";
 import MessageInput from "./MessageInput";
 import PrivateTab from "./PrivateTab";
@@ -85,6 +85,7 @@ interface Rooms {
         privateRoom: {}
         privateMessages: {}
         privateRoomIsActive: boolean
+        mobile: boolean
     }
 }
 
@@ -97,11 +98,16 @@ interface Width {
 const ChatView = () => {
     const dispatch = useDispatch();
     const currentRoom = useSelector((state: Rooms) => state.room.currentRoom);
+    const mobile = useSelector((state: Rooms) => state.room.mobile);
     const width = useSelector((state: Width) => state.width.dimension);
     const privateRoomIsActive = useSelector((state: Rooms) => state.room.privateRoomIsActive);
 
     const roomSelected = () => {
         dispatch(activePrivateRoom(false));
+    }
+
+    const tapChatviewToCloseMobileSidebar = () => {
+        dispatch(mobileViewSidebarToggle(!mobile))
     }
 
     return (
@@ -113,7 +119,7 @@ const ChatView = () => {
                     { width <= 768 && <Hamburger /> }
                 </ Spacer>
             </TabsContainer>
-            <Container>
+            <Container onClick={width <= 768 ? () => tapChatviewToCloseMobileSidebar() : undefined}>
                 <RoomMessages />
             </Container>
             <MessageInput />
