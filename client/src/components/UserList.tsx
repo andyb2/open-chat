@@ -8,9 +8,7 @@ const UsersContainer = styled.div`
     overflow: auto;
     display: flex;
     flex-direction: column;
-    @media (max-width: 768px) {
-        // display: none;
-    }
+    width: 100%;
 `
 
 const UsersTitle = styled.h1`
@@ -21,30 +19,48 @@ const UsersTitle = styled.h1`
 `
 
 const List = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     overflow-y: scroll;
     background-color: black;
-    &::-webkit-scrollbar {
-        width: 7px;
-      }
-    &::-webkit-scrollbar-track {
-        background: black;
-      }
-    &::-webkit-scrollbar-thumb {
-        background: grey;
-        border-radius: 5px;
-      }
-    &::-webkit-scrollbar-thumb:hover {
-        background: #555;
-      }
+    margin-top: 0.5rem;
+    gap: 0.5rem;
+    padding: 0;
+    @media (min-width: 769px ) {
+        &::-webkit-scrollbar {
+            width: 5px;
+            background: rgb(41,41,41);
+          }
+        &::-webkit-scrollbar-track {
+            background: black;
+            border-radius: 10px;
+          }
+        &::-webkit-scrollbar-thumb {
+            background: grey;
+            border-radius: 5px;
+          }
+        &::-webkit-scrollbar-thumb:hover {
+            background: #555;
+          }
+    }
 `
 
-const User = styled.div`
+const User = styled.button`
     color: ${(props) => props.color};
+    background-color: black;
+    border: 1px solid grey;
+    border-radius: 05px;
+    width: 80%;
     font-size: 13px;
-    padding: 0.1rem;
+    padding: 0.5rem;
     cursor: pointer;
     &:hover {
         font-size: 14px;
+        background-color: rgb(40, 40, 40)
+    }
+    @media (max-width: 769px) {
+        // width: 100%;
     }
 `
 

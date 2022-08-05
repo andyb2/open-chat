@@ -1,3 +1,5 @@
+import { produceWithPatches } from "immer";
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import { privateRoomName, activePrivateRoom, missedMessages } from "../app/reducer/roomSlice";
@@ -7,17 +9,22 @@ const Box = styled.div`
     flex-direction: column;
     align-items: center;
     gap: 0.5rem;
-    font-size: 13px;
+    // font-size: 13px;
     width: 100%;
 `
+//  height is 49px
+// missed msg height 56px
 
-const Dm = styled.button`
+interface Active {
+    active: boolean
+}
+
+const Dm = styled.button<Active>`
+    position: relative;
     display: flex;
-    justify-content: center;
-    // gap: 1rem;
+    align-items: center;
     border-radius: 10px;
     font-family: Arial;
-    text-align: center;
     border: 1px solid rgb(41, 41, 41);
     background-color: rgb(41, 41, 41);
     padding: 1rem;
@@ -30,19 +37,33 @@ const Dm = styled.button`
     &:hover {
         background-color: rgb(70, 70, 70);
     }
+    @media (max-width: 769px) {
+        font-size: 12px;
+        padding: 0.7rem;
+    }
+`
+
+const Username = styled.div`
+    display: flex;
+    justify-content: center;
+    width: 100%;
 `
 
 const MissedMessageCounter = styled.div`
     position: absolute;
-    left: 155px;
-    // top: 217px;
+    left: 125px;
+    background-color: red;
     border: 1px solid red;
-    padding: 0.1rem;
-    width: 15px;
-    background: red;
-    font-size 12px;
-    border-radius: 100px;
+    border-radius: 12px;
     color: white;
+    font: bold 9px/9px Helvetica, Verdana, Tahoma;
+    height: 11px; 
+    min-width: 10px;
+    padding: 4px 3px 0 3px;
+    line-height: 7px;
+    @media (max-width: 769px) {
+        left: 116px;
+    }
 `
 
 interface Room {
@@ -62,10 +83,16 @@ interface Room {
     }
 }
 
+interface Width {
+    width: {
+        dimension: number
+    }
+}
+
 const DirectMessages = () => {
     const privateMessages = useSelector((state: Room) => state.room.privateMessages);
     const privateRoom = useSelector((state: Room) => state.room.privateRoom);
-    const privateRoomIsActive = useSelector((state: Room) => state.room.privateRoomIsActive)
+    const privateRoomIsActive = useSelector((state: Room) => state.room.privateRoomIsActive);
     const { username } = privateRoom;
     const dispatch = useDispatch();
     
@@ -79,16 +106,22 @@ const DirectMessages = () => {
         <Box>
             {
                 Object.keys(privateMessages).map((user, idx) => {
+                    let tempBool = false;
+                    if (typeof privateMessages[user].lastIdxChecked === 'number') {
+                        tempBool = true;
+                    }
                     return (
-                        <Dm className={`${privateRoomIsActive && username === privateMessages[user].username ? 'active' : ''}`} 
+                        <Dm active={tempBool} className={`${privateRoomIsActive && username === privateMessages[user].username ? 'active' : ''}`} 
                             key={`${privateMessages[user].username}-${idx}`}
                             onClick={() => renderExisitingPrivateChat(privateMessages[user].username, privateMessages[user].socketId)}
                         >
-                            { privateMessages[user].username }
+                            <Username>{ privateMessages[user].username }</Username>
                         { typeof privateMessages[user].lastIdxChecked === 'number' &&
                             <MissedMessageCounter>
-                                { privateMessages[user].messages.length - privateMessages[user].lastIdxChecked }
-                            </MissedMessageCounter>
+                                { privateMessages[user].messages.length - privateMessages[user].lastIdxChecked <= 99 
+                                    ? privateMessages[user].messages.length - privateMessages[user].lastIdxChecked
+                                    : '99+' }
+                            </MissedMessageCounter>                            
                         }
                         </Dm>
                     )

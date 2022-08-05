@@ -126,7 +126,6 @@ const MessageInput = () => {
     const { register, handleSubmit, reset, setValue, getValues, setFocus } = useForm();
     const currentRoom = useSelector((state: Room) => state.room.currentRoom);
     const activePrivateRoom = useSelector((state: Room) => state.room.privateRoom);
-    const mobile = useSelector((state: Room) => state.room.mobile)
     const width = useSelector((state: Width) => state.width.dimension);
     const user = useSelector((state: User) => state.user);
     const privateRoomIsActive = useSelector((state: Room) => state.room.privateRoomIsActive);

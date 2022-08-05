@@ -9,13 +9,15 @@ const PrivateContainer = styled.div`
 `
 
 const Username = styled.div`
+    position: relative;
     display: flex;
+    justify-content: center;
     padding: 0.5rem;
     background-color: rgb(20, 20, 20);
     color: white;
     gap: 0.2rem;
-    font-size: 15px;
-    text-align: center;
+    font-size: 12px;
+    width: 100px;
     margin: 0;
     border-bottom: none;
     cursor: pointer;
@@ -36,13 +38,17 @@ const Username = styled.div`
 `
 
 const MissedMessageCounter = styled.div`
+    position: absolute;
+    left: 98px;
+    background-color: red;
     border: 1px solid red;
-    width: 16px;
-    padding: 0.1rem;
-    background: red;
-    font-size 12px;
-    border-radius: 100px;
+    border-radius: 12px;
     color: white;
+    font: bold 9px/9px Helvetica, Verdana, Tahoma;
+    height: 10px; 
+    min-width: 8px;
+    padding: 4px 3px 0 3px;
+    line-height: 7px;
 `
 
 interface Rooms {
@@ -83,9 +89,12 @@ const PrivateTab = () => {
                         <Username className={`${privateRoomActive && username === privateRooms[user].username ? 'active' : ''}`} onClick={() => openPrivateChat(privateRooms[user].username, privateRooms[user].socketId)} key={`${privateRooms[user].username}${idx}`}>
                             { privateRooms[user].username }
                             { typeof privateRooms[user].lastIdxChecked === 'number' &&
+                            typeof privateRooms[user].lastIdxChecked === 'number' &&
                             <MissedMessageCounter>
-                                { privateRooms[user].messages.length - privateRooms[user].lastIdxChecked }
-                            </MissedMessageCounter>
+                                { privateRooms[user].messages.length - privateRooms[user].lastIdxChecked <= 99 
+                                    ? privateRooms[user].messages.length - privateRooms[user].lastIdxChecked
+                                    : '99+' }
+                            </MissedMessageCounter> 
                         }
                         </Username>
                     )

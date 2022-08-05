@@ -114,7 +114,7 @@ const RoomList = styled.div<Active>`
 `
 
 const UserContainer = styled.div`
-
+    width: 100%;
 `
 
 const UserToggle = styled.div`
@@ -132,7 +132,8 @@ const Users = styled.div<Active>`
     justify-content: center;
     align-items: center;
     gap: 0.5rem;
-    padding: 1rem;
+    width: 100%;
+    // padding: 1rem;
 `
 
 export interface User {

@@ -30,7 +30,7 @@ const Chat = () => {
         <Grid>
             <Rooms />
             <ChatView />
-            { width >= 768 && <UserList /> }
+            { width >= 769 && <UserList /> }
         </Grid>
     )
 }
