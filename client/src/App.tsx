@@ -21,7 +21,7 @@ export interface Username {
 
 const App = () => {
   const { username } = useSelector((state: Username) => state.user) || {};
-  console.log(window.innerWidth);
+
   return (
     <Container>
       <ViewPortWidth />

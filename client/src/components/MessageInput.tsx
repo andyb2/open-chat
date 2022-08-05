@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 import { useForm } from "react-hook-form";
 import socket from "../socket";
@@ -123,7 +123,9 @@ const errors = {
 const MessageInput = () => {
     const dispatch = useDispatch();
     const [ renderPicker, setRenderPicker ] = useState<boolean>(false);
+    const inputRef = useRef<HTMLInputElement | null>(null);
     const { register, handleSubmit, reset, setValue, getValues, setFocus } = useForm();
+    const messageInput = register('message', errors);
     const currentRoom = useSelector((state: Room) => state.room.currentRoom);
     const activePrivateRoom = useSelector((state: Room) => state.room.privateRoom);
     const width = useSelector((state: Width) => state.width.dimension);
@@ -173,11 +175,24 @@ const MessageInput = () => {
         }
     },[currentRoom, activePrivateRoom, privateRoomIsActive]);
 
+    useEffect(() => {
+        inputRef.current!.onfocus = () => {
+            window.scrollTo(0, 0);
+            document.body.scrollTop = 0;
+        }
+    });
+
     return (
         <MessageParent>
             <DeliveryContainer>
                 <Form onSubmit={onSubmit}>
-                    <Input {...register('message' , errors)} placeholder='Send Message' autoComplete='off' />
+                    <Input 
+                        {...messageInput}
+                        ref={(e) => {
+                            messageInput.ref(e);
+                            inputRef.current = e
+                        }}
+                    />
                     { width >= 900 && <Emoji onClick={() => activatePicker()}> <FontAwesomeIcon icon={ faFaceSmile }/> </Emoji> }
                 </Form>
                 {   
