@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
-import { privateRoomName, activePrivateRoom } from "../app/reducer/roomSlice";
+import { privateRoomName, activePrivateRoom, missedMessages } from "../app/reducer/roomSlice";
 
 const Box = styled.div`
     display: flex;
@@ -12,6 +12,9 @@ const Box = styled.div`
 `
 
 const Dm = styled.button`
+    display: flex;
+    justify-content: center;
+    // gap: 1rem;
     border-radius: 10px;
     font-family: Arial;
     text-align: center;
@@ -29,12 +32,27 @@ const Dm = styled.button`
     }
 `
 
+const MissedMessageCounter = styled.div`
+    position: absolute;
+    left: 155px;
+    // top: 217px;
+    border: 1px solid red;
+    padding: 0.1rem;
+    width: 15px;
+    background: red;
+    font-size 12px;
+    border-radius: 100px;
+    color: white;
+`
+
 interface Room {
     room: {
         privateMessages: {
           [user: string]: {
             username: string
             socketId: string
+            lastIdxChecked: number
+            messages: []
           }
         }
         privateRoom: {
@@ -50,10 +68,11 @@ const DirectMessages = () => {
     const privateRoomIsActive = useSelector((state: Room) => state.room.privateRoomIsActive)
     const { username } = privateRoom;
     const dispatch = useDispatch();
-
+    
     const renderExisitingPrivateChat = (username: string, socketId: string) => {
         dispatch(privateRoomName({ username, socketId }));
         dispatch(activePrivateRoom(true));
+        dispatch(missedMessages({ username }));
     }
 
     return (
@@ -66,6 +85,11 @@ const DirectMessages = () => {
                             onClick={() => renderExisitingPrivateChat(privateMessages[user].username, privateMessages[user].socketId)}
                         >
                             { privateMessages[user].username }
+                        { typeof privateMessages[user].lastIdxChecked === 'number' &&
+                            <MissedMessageCounter>
+                                { privateMessages[user].messages.length - privateMessages[user].lastIdxChecked }
+                            </MissedMessageCounter>
+                        }
                         </Dm>
                     )
                 })

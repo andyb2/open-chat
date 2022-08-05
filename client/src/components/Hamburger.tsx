@@ -20,6 +20,23 @@ const Container = styled.div<Active>`
     }
 `
 
+const Burger = styled.div`
+    // &.missed-message {
+    //     animation: fadeInOut 2s infinite;
+    // }
+    // @keyframes fadeInOut {
+    //     0% {
+    //         color: none;
+    //     }
+    //     50% {
+    //         color: red;
+    //     }
+    //     100% {
+    //         color: none;
+    //     }
+    // }
+`
+
 interface Mobile {
     room: {
         mobile: boolean
@@ -41,7 +58,9 @@ const Hamburger = () => {
 
     return (
         <Container active={activeHam} onClick={() => toggleTheHamburgler()}>
-            <FontAwesomeIcon icon={faBars} size={'2x'} />
+            <Burger className="missed-message">
+                <FontAwesomeIcon icon={faBars} size={'2x'} />
+            </Burger>
         </Container>
     )
 }

@@ -60,8 +60,8 @@ const errorHandles = {
         message: 'Username must be a minimum of 5 characters',
     },
     maxLength: {
-        value: 15,
-        message: 'Username can only be maximum 15 characters',
+        value: 10,
+        message: 'Username can only be maximum 10 characters',
     },
     required: {
         value: true,

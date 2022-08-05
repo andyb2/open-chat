@@ -7,10 +7,12 @@ export interface JoinedUser {
   chat: {}[]
   privateMessages: {
     [username: string]: {
+      lastIdxChecked?: number | boolean
       messages: {}[]
     } 
   }
-  privateRoom: string | {}
+  privateRoom: any
+  
   privateRoomIsActive: boolean
   mobile: boolean
 }
@@ -47,7 +49,8 @@ export const roomSlice = createSlice({
         const privateRoomObject = {
           socketId: socketId,
           username: username,
-          messages: []
+          messages: [],
+          lastIdxChecked: false,
         };
         state.privateMessages[username] = privateRoomObject;
       }
@@ -79,14 +82,26 @@ export const roomSlice = createSlice({
         chatCopy.push({...messageObject});
         state.chat = chatCopy;
       } else {
-        const privateCopy = {...state.privateMessages}
+        const privateCopy = {...state.privateMessages};
         privateCopy[senderOrReceiver].messages.push(messageObject);
+        if ( state.privateRoomIsActive === false && privateCopy[senderOrReceiver].lastIdxChecked === false ) {
+          privateCopy[senderOrReceiver].lastIdxChecked = privateCopy[senderOrReceiver].messages.length - 1;
+        }
         state.privateMessages = privateCopy;
       }
     },
+
+    missedMessages: (state, action) => {
+      const { username } = action.payload;
+      const privateCopy = { ...state.privateMessages };
+      privateCopy[username].lastIdxChecked = false;
+      state.privateMessages = privateCopy;
+    },
+
     mobileViewSidebarToggle: (state, action) => {
       state.mobile = action.payload;
     },
+
     resetRoomState: () => initialState,
   }
 });
@@ -99,6 +114,7 @@ export const {
     createPrivateRoom,
     privateRoomName,
     activePrivateRoom,
+    missedMessages,
     mobileViewSidebarToggle,
     resetRoomState,
 } = roomSlice.actions;

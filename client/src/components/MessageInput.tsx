@@ -8,7 +8,7 @@ import moment from "moment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFaceSmile } from "@fortawesome/free-solid-svg-icons";
 import './picker.css';
-import { messages, mobileViewSidebarToggle } from "../app/reducer/roomSlice";
+import { messages } from "../app/reducer/roomSlice";
 
 const MessageParent = styled.div`
     grid-area: message-input;
@@ -169,9 +169,6 @@ const MessageInput = () => {
 
     useEffect(()=> {
         setFocus('message');
-        if ( mobile ) {
-            dispatch(mobileViewSidebarToggle(false))
-        }
     },[currentRoom, activePrivateRoom, privateRoomIsActive])
 
     return (

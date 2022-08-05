@@ -25,11 +25,16 @@ const RoomsContainer = styled.nav<Mobile>`
         display: ${({ mobileView }) => mobileView ? 'flex' : ''};
         position: fixed;
         right: 0;
-        height: calc(100% - 127px);
-        top: 64px;
+        height: calc(100% - 128px);
+        top: 65px;
         z-index: 100;
         background-color: black;
         width: 195px;
+    }
+    @media (max-width: 400px) {
+        display: ${({ mobileView }) => mobileView ? 'flex' : ''};
+        top: 49px;
+        height: calc(100% - 112px);
     }
 `
 

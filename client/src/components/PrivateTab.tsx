@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { privateRoomName, activePrivateRoom } from "../app/reducer/roomSlice";
+import { privateRoomName, activePrivateRoom, missedMessages } from "../app/reducer/roomSlice";
 import styled from "styled-components";
 
 const PrivateContainer = styled.div`
@@ -9,10 +9,12 @@ const PrivateContainer = styled.div`
 `
 
 const Username = styled.div`
+    display: flex;
     padding: 0.5rem;
+    background-color: rgb(20, 20, 20);
     color: white;
+    gap: 0.2rem;
     font-size: 15px;
-    width: 90px;
     text-align: center;
     margin: 0;
     border-bottom: none;
@@ -26,11 +28,24 @@ const Username = styled.div`
         }
     }
     &:hover {
-        background-color: rgb(30, 30, 30);
+        background-color: rgb(50, 50, 50);
     }
     @media (max-width: 400px) {
-        padding: 0.2rem;
+        padding: 0.2rem 0.5rem 0.2rem 0.5rem;
     }
+`
+
+const MissedMessageCounter = styled.div`
+    // position: absolute;
+    // left: 220px;
+    // top: 25px;
+    border: 1px solid red;
+    width: 16px;
+    padding: 0.1rem;
+    background: red;
+    font-size 12px;
+    border-radius: 100px;
+    color: white;
 `
 
 interface Rooms {
@@ -39,6 +54,8 @@ interface Rooms {
             [user: string]: {
                 username: string
                 socketId: string
+                lastIdxChecked: number
+                messages: []
             }
         },
         privateRoom: {
@@ -58,6 +75,7 @@ const PrivateTab = () => {
     const openPrivateChat = (username: string, socketId: string) => {
         dispatch(privateRoomName({ username, socketId }));
         dispatch(activePrivateRoom(true));
+        dispatch(missedMessages({ username }));
     };
     
     return (
@@ -67,6 +85,11 @@ const PrivateTab = () => {
                     return (
                         <Username className={`${privateRoomActive && username === privateRooms[user].username ? 'active' : ''}`} onClick={() => openPrivateChat(privateRooms[user].username, privateRooms[user].socketId)} key={`${privateRooms[user].username}${idx}`}>
                             { privateRooms[user].username }
+                            { typeof privateRooms[user].lastIdxChecked === 'number' &&
+                            <MissedMessageCounter>
+                                { privateRooms[user].messages.length - privateRooms[user].lastIdxChecked }
+                            </MissedMessageCounter>
+                        }
                         </Username>
                     )
                 }
