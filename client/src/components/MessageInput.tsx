@@ -168,8 +168,10 @@ const MessageInput = () => {
     }
 
     useEffect(()=> {
-        setFocus('message');
-    },[currentRoom, activePrivateRoom, privateRoomIsActive])
+        if (!mobile) {
+            setFocus('message');
+        }
+    },[currentRoom, activePrivateRoom, privateRoomIsActive]);
 
     return (
         <MessageParent>
