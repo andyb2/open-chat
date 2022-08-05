@@ -168,7 +168,8 @@ const MessageInput = () => {
     }
 
     useEffect(()=> {
-        if (!mobile) {
+        if (width > 769) {
+            console.log(`ran`)
             setFocus('message');
         }
     },[currentRoom, activePrivateRoom, privateRoomIsActive]);
