@@ -21,20 +21,20 @@ const Container = styled.div<Active>`
 `
 
 const Burger = styled.div`
-    // &.missed-message {
-    //     animation: fadeInOut 2s infinite;
-    // }
-    // @keyframes fadeInOut {
-    //     0% {
-    //         color: none;
-    //     }
-    //     50% {
-    //         color: red;
-    //     }
-    //     100% {
-    //         color: none;
-    //     }
-    // }
+    &.missed-message {
+        animation: fadeInOut 2s infinite;
+    }
+    @keyframes fadeInOut {
+        0% {
+            color: none;
+        }
+        50% {
+            color: red;
+        }
+        100% {
+            color: none;
+        }
+    }
 `
 
 interface Mobile {
@@ -43,13 +43,20 @@ interface Mobile {
     }
 }
 
+interface MissedMessage {
+    room: {
+        activeMissedToggle: boolean
+    }
+}
+
 const Hamburger = () => {
     const [ activeHam, setActiveHam ] = useState(false);
-    const mobile = useSelector((state: Mobile) => state.room.mobile)
+    const mobile = useSelector((state: Mobile) => state.room.mobile);
+    const activeMissedMessage = useSelector((state: MissedMessage) => state.room.activeMissedToggle);
     const dispatch = useDispatch();
-
+ 
     const toggleTheHamburgler = () => {
-        dispatch(mobileViewSidebarToggle(!mobile))
+        dispatch(mobileViewSidebarToggle(!mobile));
     }
 
     useEffect(() => {
@@ -58,7 +65,7 @@ const Hamburger = () => {
 
     return (
         <Container active={activeHam} onClick={() => toggleTheHamburgler()}>
-            <Burger className="missed-message">
+            <Burger className={`${ !activeHam && activeMissedMessage ? 'missed-message' : '' }`}>
                 <FontAwesomeIcon icon={faBars} size={'2x'} />
             </Burger>
         </Container>

@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { privateRoomName, activePrivateRoom, missedMessages } from "../app/reducer/roomSlice";
+import { privateRoomName, activePrivateRoom, missedMessages, activeMissedMessageToggle } from "../app/reducer/roomSlice";
 import styled from "styled-components";
 
 const PrivateContainer = styled.div`
@@ -65,13 +65,15 @@ interface Rooms {
             username: string
         }
         privateRoomIsActive: boolean
+        activeMissedToggle: boolean
     }
 }
 
 const PrivateTab = () => {
-    const privateRooms = useSelector((state: Rooms) => state.room.privateMessages);
+    const privateMessages = useSelector((state: Rooms) => state.room.privateMessages);
     const isPrivateRoomSelected = useSelector((state: Rooms) => state.room.privateRoom);
-    const privateRoomActive = useSelector((state: Rooms) => state.room.privateRoomIsActive)
+    const privateRoomActive = useSelector((state: Rooms) => state.room.privateRoomIsActive);
+    const activeMissedMessage = useSelector((state: Rooms) => state.room.activeMissedToggle);
     const { username } = isPrivateRoomSelected;
     const dispatch = useDispatch();
 
@@ -79,20 +81,32 @@ const PrivateTab = () => {
         dispatch(privateRoomName({ username, socketId }));
         dispatch(activePrivateRoom(true));
         dispatch(missedMessages({ username }));
+
+        let onlyMissedMsg = false;
+        for (const user in privateMessages) {
+            if ( user !== username && typeof privateMessages[user].lastIdxChecked === 'number' ) {
+                onlyMissedMsg = true;
+                continue;
+            }
+            if ( user === username && typeof privateMessages[user].lastIdxChecked === 'number' ) {
+                continue;
+            }
+        }
+        dispatch(activeMissedMessageToggle(onlyMissedMsg));
     };
     
     return (
         <PrivateContainer>
-            { privateRooms && Object.keys(privateRooms).map((user, idx) => {
-                if ( username === privateRooms[user].username ) {
+            { privateMessages && Object.keys(privateMessages).map((user, idx) => {
+                if ( username === privateMessages[user].username ) {
                     return (
-                        <Username className={`${privateRoomActive && username === privateRooms[user].username ? 'active' : ''}`} onClick={() => openPrivateChat(privateRooms[user].username, privateRooms[user].socketId)} key={`${privateRooms[user].username}${idx}`}>
-                            { privateRooms[user].username }
-                            { typeof privateRooms[user].lastIdxChecked === 'number' &&
-                            typeof privateRooms[user].lastIdxChecked === 'number' &&
+                        <Username className={`${privateRoomActive && username === privateMessages[user].username ? 'active' : ''}`} onClick={() => openPrivateChat(privateMessages[user].username, privateMessages[user].socketId)} key={`${privateMessages[user].username}${idx}`}>
+                            { privateMessages[user].username }
+                            { typeof privateMessages[user].lastIdxChecked === 'number' &&
+                            typeof privateMessages[user].lastIdxChecked === 'number' &&
                             <MissedMessageCounter>
-                                { privateRooms[user].messages.length - privateRooms[user].lastIdxChecked <= 99 
-                                    ? privateRooms[user].messages.length - privateRooms[user].lastIdxChecked
+                                { privateMessages[user].messages.length - privateMessages[user].lastIdxChecked <= 99 
+                                    ? privateMessages[user].messages.length - privateMessages[user].lastIdxChecked
                                     : '99+' }
                             </MissedMessageCounter> 
                         }

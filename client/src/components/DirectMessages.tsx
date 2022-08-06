@@ -1,8 +1,8 @@
 import { produceWithPatches } from "immer";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
-import { privateRoomName, activePrivateRoom, missedMessages } from "../app/reducer/roomSlice";
+import { privateRoomName, activePrivateRoom, missedMessages, activeMissedMessageToggle } from "../app/reducer/roomSlice";
 
 const Box = styled.div`
     display: flex;
@@ -12,14 +12,8 @@ const Box = styled.div`
     // font-size: 13px;
     width: 100%;
 `
-//  height is 49px
-// missed msg height 56px
 
-interface Active {
-    active: boolean
-}
-
-const Dm = styled.button<Active>`
+const Dm = styled.button`
     position: relative;
     display: flex;
     align-items: center;
@@ -101,17 +95,13 @@ const DirectMessages = () => {
         dispatch(activePrivateRoom(true));
         dispatch(missedMessages({ username }));
     }
-
+    
     return (
         <Box>
             {
-                Object.keys(privateMessages).map((user, idx) => {
-                    let tempBool = false;
-                    if (typeof privateMessages[user].lastIdxChecked === 'number') {
-                        tempBool = true;
-                    }
+                Object.keys(privateMessages).map((user, idx) => {        
                     return (
-                        <Dm active={tempBool} className={`${privateRoomIsActive && username === privateMessages[user].username ? 'active' : ''}`} 
+                        <Dm className={`${privateRoomIsActive && username === privateMessages[user].username ? 'active' : ''}`} 
                             key={`${privateMessages[user].username}-${idx}`}
                             onClick={() => renderExisitingPrivateChat(privateMessages[user].username, privateMessages[user].socketId)}
                         >

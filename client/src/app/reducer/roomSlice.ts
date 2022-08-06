@@ -12,7 +12,7 @@ export interface JoinedUser {
     } 
   }
   privateRoom: any
-  
+  activeMissedToggle: boolean
   privateRoomIsActive: boolean
   mobile: boolean
 }
@@ -25,6 +25,7 @@ const initialState: JoinedUser = {
   privateMessages: {},
   privateRoom: '',
   privateRoomIsActive: false,
+  activeMissedToggle: false,
   mobile: false,
 };
 
@@ -98,6 +99,10 @@ export const roomSlice = createSlice({
       state.privateMessages = privateCopy;
     },
 
+    activeMissedMessageToggle: (state, action) => {
+      state.activeMissedToggle = action.payload;
+    },
+
     mobileViewSidebarToggle: (state, action) => {
       state.mobile = action.payload;
     },
@@ -115,6 +120,7 @@ export const {
     privateRoomName,
     activePrivateRoom,
     missedMessages,
+    activeMissedMessageToggle, 
     mobileViewSidebarToggle,
     resetRoomState,
 } = roomSlice.actions;

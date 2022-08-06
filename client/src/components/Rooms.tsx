@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { roomsList } from "../roomList";
-import { joinedRoom, activePrivateRoom } from "../app/reducer/roomSlice";
+import { joinedRoom, activePrivateRoom, activeMissedMessageToggle } from "../app/reducer/roomSlice";
 import socket from "../socket";
 import { findAndRemoveUser } from "../helperFunctions";
 import Logo from "./Logo";
@@ -75,6 +75,20 @@ const Dm = styled.div`
     padding: 1rem;
     text-align: center;
     width: 80%;
+    &.active {
+        animation: fadeInOut 2s infinite;
+    }
+    @keyframes fadeInOut {
+        0% {
+            color: none;
+        }
+        50% {
+            color: red;
+        }
+        100% {
+            color: none;
+        }
+    }
 `
 
 const Box = styled.div`
@@ -133,7 +147,6 @@ const Users = styled.div<Active>`
     align-items: center;
     gap: 0.5rem;
     width: 100%;
-    // padding: 1rem;
 `
 
 export interface User {
@@ -149,6 +162,12 @@ interface Room {
         currentRoom: string
         roomUsers: {}[]
         mobile: boolean
+        activeMissedToggle: boolean 
+        privateMessages: {
+            [user: string]: {
+                lastIdxChecked: number | boolean
+            }
+        }
     }
 }
 
@@ -163,7 +182,9 @@ const Rooms = () => {
     const previousRoom = useSelector((state: Room) => state.room.previousRoom);
     const currentRoom = useSelector((state: Room) => state.room.currentRoom);
     const mobileView = useSelector((state: Room) => state.room.mobile);
-    const width = useSelector((state: Width) => state.width.dimension)
+    const width = useSelector((state: Width) => state.width.dimension);
+    const activeMissedMessage = useSelector((state: Room) => state.room.activeMissedToggle);
+    const privateMessages = useSelector((state: Room) => state.room.privateMessages);
     const [ roomActive, setRoomActive ] = useState(false);
     const [ dmActive, setDmActive ] = useState(false);
     const [ usersActive, setUsersActive] = useState(false)
@@ -179,6 +200,7 @@ const Rooms = () => {
 
     const showPrivateMessages = () => {
         setDmActive(prev => !prev);
+        dispatch(activeMissedMessageToggle(false));
     }
     
     const showRoomsList = () => {
@@ -194,7 +216,19 @@ const Rooms = () => {
             socket.emit('remove-room-user', { previousRoom, updateUserList });
             socket.emit('join-room', { user, currentRoom });
         }
-    }, [currentRoom])
+    }, [currentRoom]);
+
+    useEffect(() => {
+        const findMissedMessages = () => {
+            for (const user in privateMessages) {
+                if ( typeof privateMessages[user].lastIdxChecked === 'number') {
+                    dispatch(activeMissedMessageToggle(true));
+                    break;
+                }
+            }
+        }
+        findMissedMessages();  
+    }, [privateMessages])
 
     return (
         <RoomsContainer mobileView={mobileView}>
@@ -215,7 +249,7 @@ const Rooms = () => {
                             })
                     }
                 </RoomList>
-                <Dm onClick={() => showPrivateMessages()}>
+                <Dm className={`${ activeMissedMessage ? 'active' : ''}`} onClick={() => showPrivateMessages()}>
                     Private Messages
                 </Dm>
                 <RoomList active={dmActive}>
