@@ -1,8 +1,8 @@
-import { produceWithPatches } from "immer";
-import { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
-import { privateRoomName, activePrivateRoom, missedMessages, activeMissedMessageToggle } from "../app/reducer/roomSlice";
+import { privateRoomName, activePrivateRoom, missedMessages, deletePrivateMessage } from "../app/reducer/roomSlice";
 
 const Box = styled.div`
     display: flex;
@@ -60,6 +60,21 @@ const MissedMessageCounter = styled.div`
     }
 `
 
+const Xmark = styled.div`
+    color: white;
+    position: absolute;
+    height: 17px;
+    width: 17px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    &:hover {
+        color: rgb(40, 40, 40);
+        font-size: 20px;
+    }
+`
+
 interface Room {
     room: {
         privateMessages: {
@@ -95,6 +110,12 @@ const DirectMessages = () => {
         dispatch(activePrivateRoom(true));
         dispatch(missedMessages({ username }));
     }
+
+    const closePrivateChat = (e: any, user: string) => {
+        e.stopPropagation();
+        dispatch(deletePrivateMessage(user))
+        dispatch(activePrivateRoom(false));
+    }
     
     return (
         <Box>
@@ -105,7 +126,12 @@ const DirectMessages = () => {
                             key={`${privateMessages[user].username}-${idx}`}
                             onClick={() => renderExisitingPrivateChat(privateMessages[user].username, privateMessages[user].socketId)}
                         >
-                            <Username>{ privateMessages[user].username }</Username>
+                            <Xmark onClick={(e) => closePrivateChat(e, user)}>
+                                <FontAwesomeIcon icon={faXmark} size={'1x'}/>
+                            </Xmark>
+                            <Username>
+                                { privateMessages[user].username }
+                            </Username>
                         { typeof privateMessages[user].lastIdxChecked === 'number' &&
                             <MissedMessageCounter>
                                 { privateMessages[user].messages.length - privateMessages[user].lastIdxChecked <= 99 

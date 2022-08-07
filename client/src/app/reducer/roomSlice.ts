@@ -103,6 +103,15 @@ export const roomSlice = createSlice({
       state.activeMissedToggle = action.payload;
     },
 
+    deletePrivateMessage: (state, action) => {
+      const user = action.payload;
+      const privateMessageCopy = { ...state.privateMessages };
+      console.log(privateMessageCopy)
+      delete privateMessageCopy[user];
+      console.log(privateMessageCopy)
+      state.privateMessages = privateMessageCopy;
+    },
+
     mobileViewSidebarToggle: (state, action) => {
       state.mobile = action.payload;
     },
@@ -122,6 +131,7 @@ export const {
     missedMessages,
     activeMissedMessageToggle, 
     mobileViewSidebarToggle,
+    deletePrivateMessage,
     resetRoomState,
 } = roomSlice.actions;
 
