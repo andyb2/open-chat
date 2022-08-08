@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import { privateRoomName, activePrivateRoom, missedMessages, activeMissedMessageToggle, deletePrivateMessage } from "../app/reducer/roomSlice";
+import { privateRoomName, activePrivateRoom, missedMessages, activeMissedMessageToggle } from "../app/reducer/roomSlice";
 import { checkForLastMissedMessage } from '../helperFunctions';
 import styled from "styled-components";
 
@@ -92,7 +92,6 @@ const PrivateTab = () => {
     const privateMessages = useSelector((state: Rooms) => state.room.privateMessages);
     const isPrivateRoomSelected = useSelector((state: Rooms) => state.room.privateRoom);
     const privateRoomActive = useSelector((state: Rooms) => state.room.privateRoomIsActive);
-    // const activeMissedMessage = useSelector((state: Rooms) => state.room.activeMissedToggle);
     const { username } = isPrivateRoomSelected;
     const dispatch = useDispatch();
 
