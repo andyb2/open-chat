@@ -104,7 +104,7 @@ const PrivateTab = () => {
         dispatch(activeMissedMessageToggle(isOnlyMissedMsg));
     };
 
-    const closePrivateChatTab = (e: any, user: string) => {
+    const closePrivateChatTab = (e: any) => {
         e.stopPropagation();
         dispatch(activePrivateRoom(false));
         dispatch(privateRoomName(!isPrivateRoomSelected));
@@ -119,7 +119,7 @@ const PrivateTab = () => {
                                   onClick={() => openPrivateChat(privateMessages[user].username, privateMessages[user].socketId)}
                                   key={`${privateMessages[user].username}${idx}`}
                         >
-                             <Xmark onClick={(e) => closePrivateChatTab(e, user)}>
+                             <Xmark onClick={(e) => closePrivateChatTab(e)}>
                                 <FontAwesomeIcon icon={faXmark} size={'1x'}/>
                             </Xmark>
                             { privateMessages[user].username }
