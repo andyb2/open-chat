@@ -199,8 +199,10 @@ const Rooms = () => {
     }
 
     const showPrivateMessages = () => {
-        setDmActive(prev => !prev);
-        dispatch(activeMissedMessageToggle(false));
+        if (Object.keys(privateMessages).length) {
+            setDmActive(prev => !prev);
+            dispatch(activeMissedMessageToggle(false));
+        }
     }
     
     const showRoomsList = () => {
@@ -227,7 +229,10 @@ const Rooms = () => {
                 }
             }
         }
-        findMissedMessages();  
+        findMissedMessages();
+        if(!Object.keys(privateMessages).length) {
+            setDmActive(false);
+        } 
     }, [privateMessages])
 
     return (
@@ -254,8 +259,7 @@ const Rooms = () => {
                 </Dm>
                 <RoomList active={dmActive}>
                     { 
-                        dmActive &&
-                            <DirectMessages />
+                        dmActive && <DirectMessages />
                     }
                 </RoomList>
                 { width <= 768 &&
