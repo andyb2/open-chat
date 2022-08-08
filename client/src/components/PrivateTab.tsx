@@ -1,5 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
-import { privateRoomName, activePrivateRoom, missedMessages, activeMissedMessageToggle } from "../app/reducer/roomSlice";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { privateRoomName, activePrivateRoom, missedMessages, activeMissedMessageToggle, deletePrivateMessage } from "../app/reducer/roomSlice";
 import { checkForLastMissedMessage } from '../helperFunctions';
 import styled from "styled-components";
 
@@ -35,6 +37,22 @@ const Username = styled.div`
     }
     @media (max-width: 400px) {
         padding: 0.2rem 0.5rem 0.2rem 0.5rem;
+    }
+`
+
+const Xmark = styled.div`
+    color: white;
+    position: absolute;
+    left: 9px;
+    height: 17px;
+    width: 17px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    &:hover {
+        color: rgb(40, 40, 40);
+        font-size: 20px;
     }
 `
 
@@ -85,6 +103,12 @@ const PrivateTab = () => {
         const isOnlyMissedMsg = checkForLastMissedMessage();
         dispatch(activeMissedMessageToggle(isOnlyMissedMsg));
     };
+
+    const closePrivateChatTab = (e: any, user: string) => {
+        e.stopPropagation();
+        dispatch(activePrivateRoom(false));
+        dispatch(privateRoomName(!isPrivateRoomSelected));
+    }
     
     return (
         <PrivateContainer>
@@ -95,6 +119,9 @@ const PrivateTab = () => {
                                   onClick={() => openPrivateChat(privateMessages[user].username, privateMessages[user].socketId)}
                                   key={`${privateMessages[user].username}${idx}`}
                         >
+                             <Xmark onClick={(e) => closePrivateChatTab(e, user)}>
+                                <FontAwesomeIcon icon={faXmark} size={'1x'}/>
+                            </Xmark>
                             { privateMessages[user].username }
                             { typeof privateMessages[user].lastIdxChecked === 'number' &&
                                 <MissedMessageCounter>
