@@ -38,59 +38,6 @@ const RoomsContainer = styled.nav<Mobile>`
     }
 `
 
-interface RoomActive {
-    [room: string]: {}
-}
-
-const Room = styled.button<RoomActive>`
-    border-radius: 10px;
-    border: 1px solid rgb(41, 41, 41);
-    background-color: rgb(41, 41, 41);
-    padding: 1rem;
-    color: white;
-    cursor: pointer;
-    width: 100%;
-    overflow: auto;
-    &.active {
-        background-color: rgb(70, 70, 70);
-    }
-    &:hover {
-        background-color: rgb(70, 70, 70);
-    }
-`
-
-const RoomToggle = styled.div`
-    cursor: pointer;
-    border-top: 1px solid white;
-    border-bottom: 1px solid white;
-    padding: 1rem;
-    text-align: center;
-    width: 80%;
-`
-
-const Dm = styled.div`
-    cursor: pointer;
-    border-top: 1px solid white;
-    border-bottom: 1px solid white;
-    padding: 1rem;
-    text-align: center;
-    width: 80%;
-    &.active {
-        animation: fadeInOut 2s infinite;
-    }
-    @keyframes fadeInOut {
-        0% {
-            color: none;
-        }
-        50% {
-            color: red;
-        }
-        100% {
-            color: none;
-        }
-    }
-`
-
 const Box = styled.div`
     width: 85%;
     margin-top: 0.5rem;
@@ -114,6 +61,15 @@ const Box = styled.div`
       }
 `
 
+const RoomToggle = styled.div`
+    cursor: pointer;
+    border-top: 1px solid white;
+    border-bottom: 1px solid white;
+    padding: 1rem;
+    text-align: center;
+    width: 80%;
+`
+
 interface Active {
     active: boolean
 }
@@ -125,6 +81,50 @@ const RoomList = styled.div<Active>`
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem;
+`
+
+interface RoomActive {
+    [room: string]: {}
+}
+
+const Room = styled.button<RoomActive>`
+    border-radius: 10px;
+    border: 1px solid rgb(41, 41, 41);
+    background-color: rgb(41, 41, 41);
+    padding: 1rem;
+    color: white;
+    cursor: pointer;
+    width: 100%;
+    overflow: auto;
+    &.active {
+        background-color: rgb(70, 70, 70);
+    }
+    &:hover {
+        background-color: rgb(70, 70, 70);
+    }
+`
+
+const Dm = styled.div`
+    cursor: pointer;
+    border-top: 1px solid white;
+    border-bottom: 1px solid white;
+    padding: 1rem;
+    text-align: center;
+    width: 80%;
+    &.active {
+        animation: fadeInOut 2s infinite;
+    }
+    @keyframes fadeInOut {
+        0% {
+            color: none;
+        }
+        50% {
+            color: red;
+        }
+        100% {
+            color: none;
+        }
+    }
 `
 
 const UserContainer = styled.div`

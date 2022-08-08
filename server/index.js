@@ -7,7 +7,6 @@ const { Server } = require("socket.io");
 const io = new Server(server);
 const PORT = process.env.PORT || 8080;
 const { connectedUsers, roomData } = require('./users');
-const { Socket } = require('dgram');
 
 const { json, urlencoded } = express;
 

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { user } from '../app/reducer/userSlice';

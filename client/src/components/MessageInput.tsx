@@ -121,9 +121,9 @@ const errors = {
 }
 
 const MessageInput = () => {
-    const dispatch = useDispatch();
     const [ renderPicker, setRenderPicker ] = useState<boolean>(false);
     const inputRef = useRef<HTMLInputElement | null>(null);
+    const dispatch = useDispatch();
     const { register, handleSubmit, reset, setValue, getValues, setFocus } = useForm();
     const messageInput = register('message', errors);
     const currentRoom = useSelector((state: Room) => state.room.currentRoom);
