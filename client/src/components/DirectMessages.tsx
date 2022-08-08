@@ -2,14 +2,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
-import { privateRoomName, activePrivateRoom, missedMessages, deletePrivateMessage } from "../app/reducer/roomSlice";
+import { privateRoomName, activePrivateRoom, missedMessages, deletePrivateMessage, activeMissedMessageToggle } from "../app/reducer/roomSlice";
+import { checkForLastMissedMessage } from '../helperFunctions';
 
 const Box = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 0.5rem;
-    // font-size: 13px;
     width: 100%;
 `
 
@@ -37,6 +37,21 @@ const Dm = styled.button`
     }
 `
 
+const Xmark = styled.div`
+    color: white;
+    position: absolute;
+    height: 17px;
+    width: 17px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    &:hover {
+        color: rgb(40, 40, 40);
+        font-size: 20px;
+    }
+`
+
 const Username = styled.div`
     display: flex;
     justify-content: center;
@@ -60,21 +75,6 @@ const MissedMessageCounter = styled.div`
     }
 `
 
-const Xmark = styled.div`
-    color: white;
-    position: absolute;
-    height: 17px;
-    width: 17px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 100;
-    &:hover {
-        color: rgb(40, 40, 40);
-        font-size: 20px;
-    }
-`
-
 interface Room {
     room: {
         privateMessages: {
@@ -89,12 +89,6 @@ interface Room {
             username: string
         }
         privateRoomIsActive: boolean
-    }
-}
-
-interface Width {
-    width: {
-        dimension: number
     }
 }
 
@@ -113,8 +107,10 @@ const DirectMessages = () => {
 
     const closePrivateChat = (e: any, user: string) => {
         e.stopPropagation();
-        dispatch(deletePrivateMessage(user))
+        dispatch(deletePrivateMessage(user));
         dispatch(activePrivateRoom(false));
+        const isOnlyMissedMsg = checkForLastMissedMessage();
+        dispatch(activeMissedMessageToggle(isOnlyMissedMsg));
     }
     
     return (

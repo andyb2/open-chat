@@ -134,7 +134,6 @@ const MessageInput = () => {
 
     const onSubmit = handleSubmit(({ message }) => {
         const timeOfMessage = moment().format("MMM Do, YYYY h:mm A");
-
         if (message.trim() !== '') {
             if( privateRoomIsActive) {
                 socket.emit('private-message', { 

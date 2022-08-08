@@ -23,3 +23,20 @@ export const randomUserColorChoice = (): string => {
     const randomNumber = Math.floor(Math.random() * userColor.length);
     return userColor[randomNumber];
 }
+
+export const checkForLastMissedMessage = () => {
+    const privateMessages = store.getState().room.privateMessages;
+    const username = store.getState().user.username;
+    let onlyMissedMsg = false;
+
+    for (const user in privateMessages) {
+        if ( user !== username && typeof privateMessages[user].lastIdxChecked === 'number' ) {
+            onlyMissedMsg = true;
+            continue;
+        }
+        if ( user === username && typeof privateMessages[user].lastIdxChecked === 'number' ) {
+            continue;
+        }
+    }
+    return onlyMissedMsg;
+}

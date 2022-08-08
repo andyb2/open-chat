@@ -13,14 +13,10 @@ const Window = styled.div`
     width: 100%;
     min-width: 300px;
     overflow: auto;
-    // @media ( max-width: 768px ) {
-    //     align-items: center;  
-    // }
 `
 
 const TabsContainer = styled.div`
     display: flex;
-    // width: 100%;
 `
 
 interface Active {
@@ -47,6 +43,12 @@ const LobbyTitle = styled.h1<Active>`
     }
 `
 
+const Spacer = styled.div`
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+`
+
 const Container = styled.div`  
     grid-area: messages-view;    
     display: flex;
@@ -70,12 +72,6 @@ const Container = styled.div`
     &::-webkit-scrollbar-thumb:hover {
         background: #555;
       }
-`
-
-const Spacer = styled.div`
-      display: flex;
-      justify-content: space-between;
-      width: 100%;
 `
 
 interface Rooms {
