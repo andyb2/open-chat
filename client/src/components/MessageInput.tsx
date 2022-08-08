@@ -183,6 +183,7 @@ const MessageInput = () => {
                             messageInput.ref(e);
                             inputRef.current = e
                         }}
+                        autoComplete='off'
                     />
                     { width >= 900 && <Emoji onClick={() => activatePicker()}> <FontAwesomeIcon icon={ faFaceSmile }/> </Emoji> }
                 </Form>
