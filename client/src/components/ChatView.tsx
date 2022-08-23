@@ -102,6 +102,7 @@ const ChatView = () => {
         dispatch(activePrivateRoom(false));
     }
 
+    // when users click on the chat window the sidebar can be toggled on/off for mobile users
     const tapChatviewToCloseMobileSidebar = () => {
         dispatch(mobileViewSidebarToggle(!mobile))
     }
