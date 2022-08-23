@@ -4,7 +4,7 @@ Open Chat is a real time chat room that allows users to talk in rooms and privat
 
 #Technology
 
-## Front end
+##Front end
 TypeScript React Redux Styled Components
 
 ##Back end
