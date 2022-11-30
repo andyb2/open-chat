@@ -12,4 +12,4 @@ TypeScript React Redux Styled Components
 
 Node Express Socket io
 
-# How to use
+http://opchat.herokuapp.com/
